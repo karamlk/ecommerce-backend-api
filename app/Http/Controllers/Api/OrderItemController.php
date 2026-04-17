@@ -4,90 +4,61 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
-use App\Models\OrderItem;
+use App\Services\Order\OrderItemService;
 use Illuminate\Http\Request;
 
 class OrderItemController extends Controller
 {
+    protected $service;
+
+    public function __construct(OrderItemService $service)
+    {
+        $this->service = $service;
+    }
+
     public function show($itemId)
     {
-        $orderItem = OrderItem::with('product')
-            ->where('id', $itemId)->first();
+        $item = $this->service->getItem($itemId);
 
-        if (!$orderItem) {
-            return response()->json(['message' => 'item not found or not owned by the user'], 404);
+        if (!$item) {
+            return response()->json(['message' => 'Item not found'], 404);
         }
 
-        return new OrderItemResource($orderItem);
+        return new OrderItemResource($item);
     }
 
     public function update($itemId, Request $request)
     {
-        $orderItem = OrderItem::with('product')->where('id', $itemId)
-            ->first();
-
-        $order = $orderItem->order;
-
-        if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
-
-        if (!$orderItem) {
-            return response()->json(['message' => 'Order item not found'], 404);
-        }
-
-        $newQuantity = $request->input('quantity');
-        $product = $orderItem->product;
-
-        if ($newQuantity > $product->stock + $orderItem->quantity) {
-            return response()->json(['message' => 'Not enough stock'], 400);
-        }
-
-        $quantityDiff = $newQuantity - $orderItem->quantity;
-
-        $orderItem->update([
-            'quantity' => $newQuantity,
-            'price' => $product->price,
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
         ]);
 
-        $order->total = $order->items->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
-        $order->save();
+        try {
 
-        if ($quantityDiff < 0) {
-            $product->increment('stock', abs($quantityDiff));
-        } else {
-            $product->decrement('stock', $quantityDiff);
+            $item = $this->service->updateItem($itemId, $request->input('quantity'));
+
+            if (!$item) {
+                return response()->json(['message' => 'Item not found'], 404);
+            }
+
+            return new OrderItemResource($item);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
-        return new OrderItemResource($orderItem);
     }
 
     public function destroy($itemId)
     {
-        $orderItem = OrderItem::where('id', $itemId)
-            ->first();
+        try {
+            $result = $this->service->deleteItem($itemId);
 
-        $order = $orderItem->order;
+            if (!$result) {
+                return response()->json(['message' => 'Item not found'], 404);
+            }
 
-        if (!$orderItem) {
-            return response()->json(['message' => 'Order item not found'], 404);
+            return response()->json(['message' => 'Item deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
-
-        $orderItem->delete();
-
-        $order->total = $order->items->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
-        $order->save();
-
-        $product = $orderItem->product;
-        $product->increment('stock', $orderItem->quantity);
-
-        return response()->json(
-            [
-                'message' => 'the item got deleted successfully'
-            ]
-        );
     }
 }
