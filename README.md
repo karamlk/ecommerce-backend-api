@@ -1,6 +1,6 @@
-#  Delivery App – Laravel REST API Backend
+#  Ecommerce  – Laravel REST API Backend
 
-A RESTful API backend for a delivery application, built using **Laravel**. This API allows users to browse products by category and store, manage their profiles, place and edit orders, maintain a favorites list, and verify their account via OTP email using **Gmail SMTP**.    
+A RESTful API backend for a ecommerce application, built using **Laravel**. This API allows users to browse products by category and store, manage their profiles, place and edit orders, maintain a favorites list, and verify their account via OTP email using **Gmail SMTP**.    
 Laravel Sanctum is used for secure token-based authentication,
 and the system also supports **Redis** queues for handling background jobs (like OTP emails and notifications) and **Laravel Horizon** for monitoring and managing queued jobs.
 
@@ -71,8 +71,8 @@ and the system also supports **Redis** queues for handling background jobs (like
 ## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/karamlk/delivery-app-backend.git
-cd delivery-app-backend
+git clone https://github.com/karamlk/ecommerce-backend-api.git
+cd ecommerce-backend-api
 ```
 
 ## 2. Install Dependencies
@@ -170,7 +170,7 @@ All API endpoints with examples are included in the Postman collection.
 You can import it directly in Postman:
 
 1. Open Postman.
-2. Click **Import** → **File** → Select `postman/Delivery-app.postman_collection.json`.
+2. Click **Import** → **File** → Select `postman/Ecommerce-Backend-api.postman_collection.json`.
 3. Start testing the endpoints.
 
-The collection file is located in the repository at: `postman/Delivery-app.postman_collection.json`.
+The collection file is located in the repository at: `postman/Ecommerce-Backend-api.postman_collection.json`.
