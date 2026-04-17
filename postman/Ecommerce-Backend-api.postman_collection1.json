@@ -1,0 +1,3289 @@
+{
+	"info": {
+		"_postman_id": "a34e75e2-4c1b-4358-9fa3-456a951e07f3",
+		"name": "Ecommerce Bakcend Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40073765"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2|wzIyaNEtY4wND73giAcA54vq8QUjoxExoOGXUJrg192abd8f",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"first_name\":\"john\",\r\n\"last_name\":\"smith\",\r\n\"location\":\"New-York\",\r\n\"phone_number\":\"0912348876\",\r\n\"email\":\"email@gmail.com\",\r\n\"password\":\"password\",\r\n\"password_confirmation\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/register",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"register"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"first_name\":\"john\",\r\n\"last_name\":\"smith\",\r\n\"location\":\"New-York\",\r\n\"phone_number\":\"0912349076\",\r\n\"email\":\"email@gmail.com\",\r\n\"password\":\"password\",\r\n\"password_confirmation\":\"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/register",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"register"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:43:44 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User created successfully. Please verify your email.\",\n    \"email\": \"email@gmail.com\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Verify-otp",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2|wzIyaNEtY4wND73giAcA54vq8QUjoxExoOGXUJrg192abd8f",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"email\":\"emialgmail.com\",\r\n\"otp\":904213\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/verify-otp",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"verify-otp"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Verify-otp",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\":\"email@gmail.com\",\r\n\"otp\":172755\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/verify-otp",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"verify-otp"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:34:22 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "5"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "4"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Email verified successfully.\",\n    \"token\": \"2|uraRWzc5rzSldFwtq7gH1hP0orXr3CzexUhD1E2O4d324245\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Log in",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"identifier\":\"0923459876\",\r\n\"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"login"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Log in",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"identifier\":\"0912349876\",\r\n\"password\":\"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/login",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"login"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:45:24 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Login successful.\",\n    \"token\": \"3|yn4nvd4kUa4Ce3WmxCZPdz8n1xoFPmXz4MxsWDXC6904a17d\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Log out",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"quantity\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/logout",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Log out",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/logout",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"logout"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:44:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out successfully.\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Display",
+			"item": [
+				{
+					"name": "display categories",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "display categories",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/categories",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 14 Jan 2025 16:22:44 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Food\",\n        \"created_at\": \"2025-01-14T16:10:03.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:03.000000Z\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Electronics\",\n        \"created_at\": \"2025-01-14T16:10:04.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:04.000000Z\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Fashion\",\n        \"created_at\": \"2025-01-14T16:10:04.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:04.000000Z\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Books\",\n        \"created_at\": \"2025-01-14T16:10:04.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:04.000000Z\"\n    },\n    {\n        \"id\": 5,\n        \"name\": \"Home Appliances\",\n        \"created_at\": \"2025-01-14T16:10:04.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:04.000000Z\"\n    },\n    {\n        \"id\": 6,\n        \"name\": \"Furniture\",\n        \"created_at\": \"2025-01-14T16:10:04.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:04.000000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "display stores belong to a category",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/categories/1/stores",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								"1",
+								"stores"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "display stores belong to a category",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/categories/1/stores",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"categories",
+										"1",
+										"stores"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 14 Jan 2025 16:26:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Pizza Hut\",\n        \"category_id\": 1,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/store_photos/pizza_hut.png\",\n        \"created_at\": \"2025-01-14T16:10:06.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:06.000000Z\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"McDonald's\",\n        \"category_id\": 1,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/store_photos/mcdonalds.png\",\n        \"created_at\": \"2025-01-14T16:10:06.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:06.000000Z\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Starbucks\",\n        \"category_id\": 1,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/store_photos/starbucks.png\",\n        \"created_at\": \"2025-01-14T16:10:06.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:06.000000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "display products in a store",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/1/products",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								"1",
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "display products in a store",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/5/products",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										"5",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 14 Jan 2025 16:30:27 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 12,\n        \"store_id\": 5,\n        \"name\": \"Samsung Galaxy S21\",\n        \"price\": \"799.99\",\n        \"description\": \"A smartphone with a great camera, fast speed, and a nice screen.\",\n        \"stock\": 40,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/samsung_s21.png\",\n        \"created_at\": \"2025-01-14T16:10:07.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:07.000000Z\"\n    },\n    {\n        \"id\": 13,\n        \"store_id\": 5,\n        \"name\": \"Samsung QLED TV\",\n        \"price\": \"1200.99\",\n        \"description\": \"A TV with bright colors and clear images. Great for watching movies and shows.\",\n        \"stock\": 10,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/samsung_qled_tv.png\",\n        \"created_at\": \"2025-01-14T16:10:07.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:07.000000Z\"\n    },\n    {\n        \"id\": 14,\n        \"store_id\": 5,\n        \"name\": \"Samsung Gear S3\",\n        \"price\": \"299.99\",\n        \"description\": \"A smart watch to track your fitness and stay connected.\",\n        \"stock\": 25,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/samsung_gear_s3.png\",\n        \"created_at\": \"2025-01-14T16:10:07.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:07.000000Z\"\n    },\n    {\n        \"id\": 15,\n        \"store_id\": 5,\n        \"name\": \"Samsung Galaxy Tab S7\",\n        \"price\": \"649.99\",\n        \"description\": \"A powerful tablet that can be used for work or fun.\",\n        \"stock\": 30,\n        \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/samsung_tab_s7.png\",\n        \"created_at\": \"2025-01-14T16:10:07.000000Z\",\n        \"updated_at\": \"2025-01-14T16:10:07.000000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "display details of product",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/5/products/12",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								"5",
+								"products",
+								"12"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "display details of product",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/5/products/12",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										"5",
+										"products",
+										"12"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 14 Jan 2025 16:32:25 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 12,\n    \"store_id\": 5,\n    \"name\": \"Samsung Galaxy S21\",\n    \"price\": \"799.99\",\n    \"description\": \"A smartphone with a great camera, fast speed, and a nice screen.\",\n    \"stock\": 40,\n    \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/samsung_s21.png\",\n    \"created_at\": \"2025-01-14T16:10:07.000000Z\",\n    \"updated_at\": \"2025-01-14T16:10:07.000000Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "display products in home page",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|gilB0g69tBHEiPqHiOAYlt9CxEsIKiWv7qhjFHHAeb611c35",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/home/products",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"home",
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "display products in home page",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/home/products",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"home",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:38:07 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"id\": 1,\n            \"store_id\": 1,\n            \"name\": \"Neapolitan Pizza\",\n            \"price\": \"10.99\",\n            \"description\": \"Et est qui sequi vel blanditiis.\",\n            \"stock\": 25,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/003344?text=business+Product+quisquam\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"store_id\": 1,\n            \"name\": \"Cheese Pizza\",\n            \"price\": \"8.99\",\n            \"description\": \"Soluta qui quis laboriosam asperiores.\",\n            \"stock\": 20,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/00aa88?text=business+Product+et\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 3,\n            \"store_id\": 1,\n            \"name\": \"Garlic Bread\",\n            \"price\": \"4.99\",\n            \"description\": \"Asperiores architecto ut optio dolores ab et deleniti velit.\",\n            \"stock\": 45,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/000055?text=business+Product+porro\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 4,\n            \"store_id\": 5,\n            \"name\": \"Samsung Galaxy S21\",\n            \"price\": \"799.99\",\n            \"description\": \"Cumque qui ab expedita illum in dignissimos est et.\",\n            \"stock\": 10,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/00cc88?text=business+Product+dolore\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 5,\n            \"store_id\": 5,\n            \"name\": \"Sony TV 55 inch\",\n            \"price\": \"499.99\",\n            \"description\": \"Eligendi ipsa nisi voluptatem voluptates et.\",\n            \"stock\": 4,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/00eeff?text=business+Product+et\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 6,\n            \"store_id\": 5,\n            \"name\": \"Apple MacBook Pro\",\n            \"price\": \"1299.99\",\n            \"description\": \"Non doloribus sed sequi.\",\n            \"stock\": 75,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/006699?text=business+Product+totam\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 7,\n            \"store_id\": 11,\n            \"name\": \"Air Max Sneakers\",\n            \"price\": \"129.99\",\n            \"description\": \"Qui laborum qui quia eum nesciunt officia expedita.\",\n            \"stock\": 23,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/00eebb?text=business+Product+tenetur\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 8,\n            \"store_id\": 11,\n            \"name\": \"Nike Hoodie\",\n            \"price\": \"49.99\",\n            \"description\": \"Velit dignissimos deserunt quibusdam et reprehenderit.\",\n            \"stock\": 35,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/00bbee?text=business+Product+aperiam\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        },\n        {\n            \"id\": 9,\n            \"store_id\": 11,\n            \"name\": \"Nike Running Shorts\",\n            \"price\": \"29.99\",\n            \"description\": \"Et debitis temporibus consequuntur earum aut dignissimos qui et.\",\n            \"stock\": 28,\n            \"image_url\": \"https://via.placeholder.com/640x480.png/007788?text=business+Product+et\",\n            \"created_at\": \"2024-12-19T19:58:34.000000Z\",\n            \"updated_at\": \"2024-12-19T19:58:34.000000Z\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Index",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Index",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 14:53:47 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"total\": \"390.51\",\n            \"status\": \"pending\"\n        },\n        {\n            \"id\": 2,\n            \"total\": \"69.80\",\n            \"status\": \"pending\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Store the cart's items in order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Store the cart's items in order",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:55:06 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user_id\": 3,\n    \"status\": \"pending\",\n    \"total\": 8017.879999999999,\n    \"updated_at\": \"2024-12-21T21:55:06.000000Z\",\n    \"created_at\": \"2024-12-21T21:55:06.000000Z\",\n    \"id\": 3\n}"
+						}
+					]
+				},
+				{
+					"name": "Displaying the items in the order",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"quantity\":10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Displaying the items in the order",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/2",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 14:57:14 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 5,\n            \"product_id\": {\n                \"name\": \"McChicken\",\n                \"price\": \"3.99\",\n                \"description\": \"A crispy chicken sandwich with lettuce and mayo. Tasty and simple.\",\n                \"stock\": 70,\n                \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/mcdonalds_mcchicken.png\"\n            },\n            \"quantity\": 10,\n            \"price\": \"3.99\"\n        },\n        {\n            \"id\": 6,\n            \"product_id\": {\n                \"name\": \"Fries\",\n                \"price\": \"2.99\",\n                \"description\": \"Crispy and golden fries, perfect with any meal.\",\n                \"stock\": 140,\n                \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/mcdonalds_fries.png\"\n            },\n            \"quantity\": 10,\n            \"price\": \"2.99\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Displaying an item in the order",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/2/items/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"2",
+								"items",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Displaying an item in the order",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/items/1",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"items",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 14:59:26 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"product_id\": {\n            \"name\": \"Cheese Pizza\",\n            \"price\": \"8.99\",\n            \"description\": \"A pizza with lots of melted cheese. Perfect for cheese lovers.\",\n            \"stock\": 1,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/pizza_hut_cheese.png\"\n        },\n        \"quantity\": 19,\n        \"price\": \"8.99\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update an item in the order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"quantity\":9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/2/items/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"2",
+								"items",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update an item in the order",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"quantity\":5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/items/1",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"items",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 15:00:38 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"product_id\": {\n            \"name\": \"Cheese Pizza\",\n            \"price\": \"8.99\",\n            \"description\": \"A pizza with lots of melted cheese. Perfect for cheese lovers.\",\n            \"stock\": 15,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/product_photos/pizza_hut_cheese.png\"\n        },\n        \"quantity\": 5,\n        \"price\": \"8.99\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete an item in the order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/2/items/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"2",
+								"items",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete an item in the order",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/items/1",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"items",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 15:02:43 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"the item got deleted successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete the whole order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"quantity\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete the whole order",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/2",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 15:03:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Order and its items have been deleted successfully, stock restored.\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Add item to the cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|gilB0g69tBHEiPqHiOAYlt9CxEsIKiWv7qhjFHHAeb611c35",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"product_id\":2,\r\n\"quantity\":10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/cart",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add item to the cart",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"product_id\":4,\r\n\"quantity\":10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/cart",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"cart"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:52:07 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user_id\": 3,\n    \"product_id\": 4,\n    \"quantity\": 10,\n    \"updated_at\": \"2024-12-21T21:52:07.000000Z\",\n    \"created_at\": \"2024-12-21T21:52:07.000000Z\",\n    \"id\": 8\n}"
+						}
+					]
+				},
+				{
+					"name": "index",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"quantity\":10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/cart",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "index",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/cart",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"cart"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 13:21:43 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"product_id\": 2,\n            \"quantity\": 10\n        },\n        {\n            \"id\": 2,\n            \"product_id\": 1,\n            \"quantity\": 10\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "update an item's cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"quantity\":10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/cart/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"cart",
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update an item's cart",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"quantity\":19\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/cart/1",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"cart",
+										"1"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 13:22:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"product_id\": 2,\n        \"quantity\": 19\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "destroy an item's cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|Gl8NILuRHKays66kH65tfUfAFV4cdfakfo9EGc4ja1d371a3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/cart/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"cart",
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Destroy",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/cart/2",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"cart",
+										"2"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:36:20 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Item removed from cart\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Favorite",
+			"item": [
+				{
+					"name": "Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|gilB0g69tBHEiPqHiOAYlt9CxEsIKiWv7qhjFHHAeb611c35",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/favorites",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"favorites"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Store",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\":25\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/favorites",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"favorites"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 09 Jan 2025 15:22:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Product added to favorites successfully.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Index",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|gilB0g69tBHEiPqHiOAYlt9CxEsIKiWv7qhjFHHAeb611c35",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/favorites",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"favorites"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Index",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/favorites",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"favorites"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 09 Jan 2025 15:25:18 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"categories\": [\n        {\n            \"category_name\": \"Food\",\n            \"favorites\": [\n                {\n                    \"id\": 1,\n                    \"user_id\": 1,\n                    \"product_id\": 11,\n                    \"category_id\": 1,\n                    \"created_at\": \"2025-01-09T15:21:31.000000Z\",\n                    \"updated_at\": \"2025-01-09T15:21:31.000000Z\",\n                    \"product\": {\n                        \"id\": 11,\n                        \"store_id\": 3,\n                        \"name\": \"Iced Coffee\",\n                        \"price\": \"3.49\",\n                        \"description\": \"Esse quam aperiam rerum.\",\n                        \"stock\": 110,\n                        \"image_url\": \"https://via.placeholder.com/640x480.png/0033cc?text=business+Product+eos\",\n                        \"created_at\": \"2025-01-09T15:16:51.000000Z\",\n                        \"updated_at\": \"2025-01-09T15:16:51.000000Z\",\n                        \"store\": {\n                            \"id\": 3,\n                            \"name\": \"Starbucks\",\n                            \"category_id\": 1,\n                            \"created_at\": \"2025-01-09T15:16:50.000000Z\",\n                            \"updated_at\": \"2025-01-09T15:16:50.000000Z\",\n                            \"category\": {\n                                \"id\": 1,\n                                \"name\": \"Food\",\n                                \"created_at\": \"2025-01-09T15:16:47.000000Z\",\n                                \"updated_at\": \"2025-01-09T15:16:47.000000Z\"\n                            }\n                        }\n                    }\n                }\n            ]\n        },\n        {\n            \"category_name\": \"Electronics\",\n            \"favorites\": [\n                {\n                    \"id\": 2,\n                    \"user_id\": 1,\n                    \"product_id\": 14,\n                    \"category_id\": 2,\n                    \"created_at\": \"2025-01-09T15:21:50.000000Z\",\n                    \"updated_at\": \"2025-01-09T15:21:50.000000Z\",\n                    \"product\": {\n                        \"id\": 14,\n                        \"store_id\": 5,\n                        \"name\": \"Samsung Gear S3\",\n                        \"price\": \"299.99\",\n                        \"description\": \"Repellendus ea qui officiis consequatur quod quae delectus.\",\n                        \"stock\": 25,\n                        \"image_url\": \"https://via.placeholder.com/640x480.png/00ee55?text=business+Product+quaerat\",\n                        \"created_at\": \"2025-01-09T15:16:51.000000Z\",\n                        \"updated_at\": \"2025-01-09T15:16:51.000000Z\",\n                        \"store\": {\n                            \"id\": 5,\n                            \"name\": \"Samsung\",\n                            \"category_id\": 2,\n                            \"created_at\": \"2025-01-09T15:16:50.000000Z\",\n                            \"updated_at\": \"2025-01-09T15:16:50.000000Z\",\n                            \"category\": {\n                                \"id\": 2,\n                                \"name\": \"Electronics\",\n                                \"created_at\": \"2025-01-09T15:16:47.000000Z\",\n                                \"updated_at\": \"2025-01-09T15:16:47.000000Z\"\n                            }\n                        }\n                    }\n                }\n            ]\n        },\n        {\n            \"category_name\": \"Fashion\",\n            \"favorites\": [\n                {\n                    \"id\": 3,\n                    \"user_id\": 1,\n                    \"product_id\": 25,\n                    \"category_id\": 3,\n                    \"created_at\": \"2025-01-09T15:22:09.000000Z\",\n                    \"updated_at\": \"2025-01-09T15:22:09.000000Z\",\n                    \"product\": {\n                        \"id\": 25,\n                        \"store_id\": 7,\n                        \"name\": \"Adidas Jacket\",\n                        \"price\": \"79.99\",\n                        \"description\": \"Quam vel unde provident magni nam inventore.\",\n                        \"stock\": 40,\n                        \"image_url\": \"https://via.placeholder.com/640x480.png/000066?text=business+Product+soluta\",\n                        \"created_at\": \"2025-01-09T15:16:51.000000Z\",\n                        \"updated_at\": \"2025-01-09T15:16:51.000000Z\",\n                        \"store\": {\n                            \"id\": 7,\n                            \"name\": \"Adidas\",\n                            \"category_id\": 3,\n                            \"created_at\": \"2025-01-09T15:16:50.000000Z\",\n                            \"updated_at\": \"2025-01-09T15:16:50.000000Z\",\n                            \"category\": {\n                                \"id\": 3,\n                                \"name\": \"Fashion\",\n                                \"created_at\": \"2025-01-09T15:16:47.000000Z\",\n                                \"updated_at\": \"2025-01-09T15:16:47.000000Z\"\n                            }\n                        }\n                    }\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|gilB0g69tBHEiPqHiOAYlt9CxEsIKiWv7qhjFHHAeb611c35",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/favorites",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"favorites"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Destroy",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\":4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/favorites",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"favorites"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:37:24 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Product removed from favorites successfully.\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "the information of the user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|koHLIuBRZD63I76OeM66hwyWOfWBt4ZKChsWRpN09dc64a33",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "the information of the user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/profile",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 09 Jan 2025 15:43:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"first_name\": \"john\",\n        \"last_name\": \"test\",\n        \"location\": \"New-York\",\n        \"phone_number\": \"0912349076\",\n        \"email\": \"testupdate123@gmail.com\",\n        \"profile_photo\": \"http://127.0.0.1:8000/storage/profile_photos/default_avatar.png\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "the list of the profile's photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|koHLIuBRZD63I76OeM66hwyWOfWBt4ZKChsWRpN09dc64a33",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/profile/photos",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"profile",
+								"photos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "the list of the profile's photos",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/profile/photos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"profile",
+										"photos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Jan 2025 16:29:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"photos\": [\n        {\n            \"id\": 1,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar1.png\"\n        },\n        {\n            \"id\": 2,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar2.png\"\n        },\n        {\n            \"id\": 3,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar3.png\"\n        },\n        {\n            \"id\": 4,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar4.png\"\n        },\n        {\n            \"id\": 5,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar5.png\"\n        },\n        {\n            \"id\": 6,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar6.png\"\n        },\n        {\n            \"id\": 11,\n            \"photo_url\": \"http://127.0.0.1:8000/storage/profile_photos/default_avatar.png\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "update the profile photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|koHLIuBRZD63I76OeM66hwyWOfWBt4ZKChsWRpN09dc64a33",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"photo_id\":6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/profile/photo",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"profile",
+								"photo"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update the profile photo",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"photo_id\":6\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/profile/photo",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"profile",
+										"photo"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 09 Jan 2025 13:30:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"first_name\": \"tom\",\n        \"last_name\": \"cruise\",\n        \"location\": \"london\",\n        \"phone_number\": \"0912349076\",\n        \"email\": \"testupdate123@gmail.com\",\n        \"profile_photo\": \"http://127.0.0.1:8000/storage/profile_photos/Avatar6.png\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "update the profile informations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2|x44jzF9lh94aXWi8tWk8nST6o7LO0BYvGzDlxqmJ7a27cc74",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"first_name\":\"john1\",\r\n\"last_name\":\"smith1\",\r\n\"location\":\"LA\",\r\n\"phone_number\":\"0919349076\",\r\n\"email\":\"email1@gmail.com\",\r\n\"current_password\":\"password\",\r\n\"new_password\":\"password123\",\r\n\"new_password_confirmation\":\"password123\"\r\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update the profile informations",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"first_name\":\"john1\",\r\n\"last_name\":\"smith1\",\r\n\"location\":\"LA\",\r\n\"phone_number\":\"0919349076\",\r\n\"email\":\"email1@gmail.com\",\r\n\"current_password\":\"password\",\r\n\"new_password\":\"password123\",\r\n\"new_password_confirmation\":\"password123\"\r\n}"
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/profile",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 08 Oct 2025 15:08:55 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Profile updated successfully.\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
