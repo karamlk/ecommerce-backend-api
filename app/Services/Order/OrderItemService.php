@@ -47,7 +47,8 @@ class OrderItemService
 
             $this->updateProductStock($product, $quantityDiff);
 
-            // Recalculate order total
+            $order->load('items');
+
             $order->update([
                 'total' => $order->items->sum(fn($item) => $item->price * $item->quantity)
             ]);
@@ -79,7 +80,8 @@ class OrderItemService
             // Delete item
             $orderItem->delete();
 
-            // Recalculate total
+            $order->load('items');
+
             $order->update([
                 'total' => $order->items->sum(fn($item) => $item->price * $item->quantity)
             ]);
