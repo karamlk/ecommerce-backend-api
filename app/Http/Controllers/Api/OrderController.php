@@ -5,17 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
-use App\Models\CartItem;
 use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Services\Order\OrderService;
+
 
 class OrderController extends Controller
 {
+    public function __construct(private OrderService $orderService) {}
+
     public function index()
     {
-        $orders = Order::where('user_id', auth('sanctum')->id())
-            ->get();
+        $orders = $this->orderService->getUserOrders(auth('sanctum')->id());
 
         if ($orders->isEmpty()) {
             return response()->json(['message' => 'No orders found'], 404);
@@ -27,86 +27,55 @@ class OrderController extends Controller
 
     public function show($orderId)
     {
-        $order = Order::with(['user','items.product'])
-            ->where('id', $orderId)
-            ->where('user_id',  auth('sanctum')->id())
-            ->first();
-
-        $orderItems = $order->items;
+        $order = $this->orderService->getOrderWithItems(
+            $orderId,
+            auth('sanctum')->id()
+        );
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
 
-        return  OrderItemResource::collection($orderItems);
+        return OrderItemResource::collection($order->items);
     }
 
     public function store()
     {
-        $cartItems = CartItem::where('user_id',  auth('sanctum')->id())->get();
-
-        if ($cartItems->isEmpty()) {
-            return response()->json(['message' => 'The cart is empty'], 400);
-        }
-
-        DB::beginTransaction();
-
         try {
-            $order = Order::create([
-                'user_id' => auth('sanctum')->id(),
-                'status' => 'pending',
-                'total' => $cartItems->sum(function ($item) {
-                    return $item->product->price * $item->quantity;
-                }),
-            ]);
+            $order = $this->orderService->createOrderFromCart(auth('sanctum')->id());
 
-            foreach ($cartItems as $cartItem) {
-                $product = $cartItem->product;
-                if ($product->stock < $cartItem->quantity) {
-                    return response()->json(['message' => 'Not enough stock'], 400);
-                }
-
-                $product->decrement('stock', $cartItem->quantity);
-
-                $order->items()->create([
-                    'product_id' => $product->id,
-                    'quantity' => $cartItem->quantity,
-                    'price' => $product->price,
-                ]);
+            if (!$order) {
+                return response()->json(['message' => 'The cart is empty'], 400);
             }
-
-            $cartItems->each->delete();
-
-            DB::commit();
 
             return response()->json([
                 'message' => 'order has been added successfully'
             ], 201);
         } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['message' => 'Order creation failed', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Order creation failed',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
 
     public function destroy($orderId)
     {
         $order = Order::where('id', $orderId)
-            ->where('user_id',  auth('sanctum')->id())
+            ->where('user_id', auth('sanctum')->id())
             ->first();
 
         if (!$order) {
-            return response()->json(['message' => 'Order not found or not owned by the user'], 404);
+            return response()->json([
+                'message' => 'Order not found or not owned by the user'
+            ], 404);
         }
 
-        foreach ($order->items as $orderItem) {
-            $product = $orderItem->product;
-            $product->increment('stock', $orderItem->quantity);
-        }
+        $this->orderService->deleteOrder($order);
 
-        $order->items()->delete();
-
-        $order->delete();
-
-        return response()->json(['message' => 'Order and its items have been deleted successfully, stock restored.'], 200);
+        return response()->json([
+            'message' => 'Order deleted and stock restored'
+        ]);
     }
 }
