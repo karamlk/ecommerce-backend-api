@@ -3,41 +3,42 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cart\StoreCartRequest;
 use App\Http\Resources\CartItemResource;
-use App\Models\CartItem;
-use App\Models\Product;
+use App\Services\Cart\CartService;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+    protected CartService  $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     public function index()
     {
-        $cartItems = CartItem::with('product')
-            ->where('user_id', auth('sanctum')->id())
-            ->get();
+        $cartItems = $this->cartService->getUserCart(auth('sanctum')->id());
+
         return CartItemResource::collection($cartItems);
     }
 
-    public function store(Request $request)
+    public function store(StoreCartRequest $request)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
+        try {
+            $cartItem = $this->cartService->addToCart(
+                auth('sanctum')->id(),
+                $request->product_id,
+                $request->quantity
+            );
 
-        $product = Product::findOrFail($request->product_id);
-
-        if ($product->stock < $request->quantity) {
-            return response()->json(['message' => 'Not enough stock', 'available_stock' => $product->stock], 400);
+            return new CartItemResource($cartItem);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
         }
-
-        CartItem::create([
-            'user_id' => auth('sanctum')->id(),
-            'product_id' => $product->id,
-            'quantity' => $request->quantity,
-        ]);
-
-        return response()->json(['message' => 'Product added to cart successfully.'], 201);
     }
 
     public function update(Request $request, $cartItemId)
@@ -46,25 +47,51 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $cartItem = CartItem::findOrFail($cartItemId);
-        $product = $cartItem->product;
+        try {
+            $cartItem = $this->cartService->updateCartItem(
+                auth('sanctum')->id(),
+                $cartItemId,
+                $request->quantity
+            );
 
-        if ($product->stock < $request->quantity) {
-            return response()->json(['message' => 'Not enough stock', 'available_stock' => $product->stock], 400);
+            if (!$cartItem) {
+                return response()->json([
+                    'message' => 'Cart item not found'
+                ], 404);
+            }
+
+            return new CartItemResource($cartItem);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
         }
-
-        $cartItem->update([
-            'quantity' => $request->quantity,
-        ]);
-
-        return new CartItemResource($cartItem);
     }
 
     public function destroy($cartItemId)
     {
-        $cartItem = CartItem::findOrFail($cartItemId);
-        $cartItem->delete();
+        $result = $this->cartService->removeCartItem(
+            auth('sanctum')->id(),
+            $cartItemId
+        );
 
-        return response()->json(['message' => 'Item removed from cart']);
+        if (!$result) {
+            return response()->json([
+                'message' => 'Cart item not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Item removed from cart'
+        ]);
+    }
+
+    public function clear()
+    {
+        $this->cartService->clearCart(auth('sanctum')->id());
+
+        return response()->json([
+            'message' => 'Cart cleared successfully'
+        ]);
     }
 }
