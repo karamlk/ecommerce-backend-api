@@ -58,6 +58,12 @@ class CartService
     {
         return DB::transaction(function () use ($userId, $cartItemId, $newQuantity) {
 
+            // TASK 2: Resource Management & Capacity Control - limit the cart capacity
+            $cartCount = CartItem::where('user_id', $userId)->count();
+            if ($cartCount >= 50) {
+                throw new \Exception('Cart capacity reached (Max 50 unique items).');
+            }
+
             // TASK 1: Concurrent Access & Data Integrity
             $cartItem = CartItem::with('product')
                 ->where('id', $cartItemId)
