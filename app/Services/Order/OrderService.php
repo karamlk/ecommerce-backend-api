@@ -5,6 +5,7 @@ namespace App\Services\Order;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
@@ -22,29 +23,32 @@ class OrderService
             ->first();
     }
 
-   public function createOrderFromCart($userId)
+    public function createOrderFromCart($userId)
     {
-        // TASK 1: Concurrent Access & Data Integrity - Redis lock prevents double checkout
-            $cartItems = CartItem::where('user_id', $userId)->get();
+        // TASK 2: Resource Management & Capacity Control - Cache::Lock
+        return Cache::lock("checkout-global-limit", 5)
+            ->block(5, function () use ($userId) {
+                // TASK 1: Concurrent Access & Data Integrity
+                $cartItems = CartItem::where('user_id', $userId)->get();
 
-            if ($cartItems->isEmpty()) {
-                return null;
-            }
+                if ($cartItems->isEmpty()) {
+                    return null;
+                }
 
-            return DB::transaction(function () use ($cartItems, $userId) {
+                return DB::transaction(function () use ($cartItems, $userId) {
 
-                $order = Order::create([
-                    'user_id' => $userId,
-                    'status' => 'pending',
-                    'total' => $this->calculateCartTotal($cartItems),
-                ]);
+                    $order = Order::create([
+                        'user_id' => $userId,
+                        'status' => 'pending',
+                        'total' => $this->calculateCartTotal($cartItems),
+                    ]);
 
-                $this->processCartItems($order, $cartItems);
-                $this->clearCart($cartItems);
+                    $this->processCartItems($order, $cartItems);
+                    $this->clearCart($cartItems);
 
-                return $order;
+                    return $order;
+                });
             });
-        
     }
 
 
