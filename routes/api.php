@@ -50,7 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/favorites', [FavoriteController::class, 'destroy']);
 });
 
-Route::post('/register', [RegisterController::class, 'register']);
+// TASK 2: Resource Management & Capacity Control - throttle
+Route::post('/register', [RegisterController::class, 'register'])->middleware('throttle:5,1');
 // TASK 2: Resource Management & Capacity Control - throttle
 Route::post('/verify-otp', [RegisterController::class, 'verifyOtp'])->middleware('throttle:5,1');
 
