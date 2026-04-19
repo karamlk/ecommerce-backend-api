@@ -4,6 +4,7 @@ namespace App\Services\Order;
 
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
@@ -21,36 +22,50 @@ class OrderService
             ->first();
     }
 
-    public function createOrderFromCart($userId)
+   public function createOrderFromCart($userId)
     {
-        $cartItems = CartItem::where('user_id', $userId)->get();
+        // TASK 1: Concurrent Access & Data Integrity - Redis lock prevents double checkout
+            $cartItems = CartItem::where('user_id', $userId)->get();
 
-        if ($cartItems->isEmpty()) {
-            return null;
-        }
+            if ($cartItems->isEmpty()) {
+                return null;
+            }
 
-        return DB::transaction(function () use ($cartItems, $userId) {
+            return DB::transaction(function () use ($cartItems, $userId) {
 
-            $order = Order::create([
-                'user_id' => $userId,
-                'status' => 'pending',
-                'total' => $this->calculateCartTotal($cartItems),
-            ]);
+                $order = Order::create([
+                    'user_id' => $userId,
+                    'status' => 'pending',
+                    'total' => $this->calculateCartTotal($cartItems),
+                ]);
 
-            $this->processCartItems($order, $cartItems);
+                $this->processCartItems($order, $cartItems);
+                $this->clearCart($cartItems);
 
-            $this->clearCart($cartItems);
-
-            return $order;
-        });
+                return $order;
+            });
+        
     }
+
+
 
     public function deleteOrder($order)
     {
         return DB::transaction(function () use ($order) {
 
+            // TASK 1: Concurrent Access & Data Integrity - Lock order items rows
+            $order->load(['items' => function ($query) {
+                $query->lockForUpdate();
+            }]);
+
             foreach ($order->items as $orderItem) {
-                $orderItem->product->increment('stock', $orderItem->quantity);
+
+                // TASK 1: Concurrent Access & Data Integrity
+                $product = Product::where('id', $orderItem->product_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                $product->increment('stock', $orderItem->quantity);
             }
 
             $order->items()->delete();
@@ -71,7 +86,10 @@ class OrderService
     {
         foreach ($cartItems as $cartItem) {
 
-            $product = $cartItem->product;
+            // TASK 1: Concurrent Access & Data Integrity - lock product row
+            $product = Product::where('id', $cartItem->product_id)
+                ->lockForUpdate()
+                ->first();
 
             if ($product->stock < $cartItem->quantity) {
                 throw new \Exception('Not enough stock for product: ' . $product->id);
