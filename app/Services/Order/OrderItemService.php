@@ -3,6 +3,7 @@
 namespace App\Services\Order;
 
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class OrderItemService
@@ -22,7 +23,10 @@ class OrderItemService
                 return null;
             }
 
-            $product = $orderItem->product;
+            // TASK 1: Concurrent Access & Data Integrity
+            $product = Product::where('id', $orderItem->product_id)
+                ->lockForUpdate()
+                ->first();
             $order = $orderItem->order;
 
             if (!$order) {
@@ -67,7 +71,10 @@ class OrderItemService
                 return null;
             }
 
-            $product = $orderItem->product;
+            // TASK 1: Concurrent Access & Data Integrity
+            $product = \App\Models\Product::where('id', $orderItem->product_id)
+                ->lockForUpdate()
+                ->first();
             $order = $orderItem->order;
 
             if (!$order) {
