@@ -6,6 +6,7 @@ use App\Mail\SendOtpMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redis;
 
 class SendOtpJob implements ShouldQueue
 {
@@ -28,7 +29,16 @@ class SendOtpJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $mailable = new SendOtpMail($this->otp);
-        Mail::to($this->email)->send($mailable);
+        // TASK 2: Resource Management & Capacity Control - throttle emails-jobs
+        Redis::throttle('send-otp')
+            ->allow(10)
+            ->every(60)     // Every 60 seconds
+            ->then(function () {
+                $mailable = new SendOtpMail($this->otp);
+                Mail::to($this->email)->send($mailable);
+            }, function () {
+                // (Capacity reached), 
+                return $this->release(30);
+            });
     }
 }
