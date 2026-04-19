@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('/register', [RegisterController::class, 'register']);
+// TASK 2: Resource Management & Capacity Control - throttle
 Route::post('/verify-otp', [RegisterController::class, 'verifyOtp'])->middleware('throttle:5,1');
 
 Route::post('/login', [LoginController::class, 'login']);
