@@ -19,14 +19,17 @@ class CartService
     {
         return DB::transaction(function () use ($userId, $productId, $quantity) {
 
-            $product = Product::findOrFail($productId);
+            // TASK 1: Concurrent Access & Data Integrity
+            $product = Product::where('id', $productId)->lockForUpdate()->findOrFail($productId);
 
             if ($product->stock < $quantity) {
                 throw new \Exception('Not enough stock');
             }
 
+            // TASK 1: Concurrent Access & Data Integrity
             $cartItem = CartItem::where('user_id', $userId)
                 ->where('product_id', $productId)
+                ->lockForUpdate()
                 ->first();
 
             if ($cartItem) {
@@ -55,9 +58,11 @@ class CartService
     {
         return DB::transaction(function () use ($userId, $cartItemId, $newQuantity) {
 
+            // TASK 1: Concurrent Access & Data Integrity
             $cartItem = CartItem::with('product')
                 ->where('id', $cartItemId)
                 ->where('user_id', $userId)
+                ->lockForUpdate()
                 ->first();
 
             if (!$cartItem) {
@@ -68,7 +73,8 @@ class CartService
                 throw new \Exception('Invalid quantity');
             }
 
-            $product = $cartItem->product;
+            // TASK 1: Concurrent Access & Data Integrity
+            $product = Product::where('id', $cartItem->product_id)->lockForUpdate()->first();
 
             $diff = $newQuantity - $cartItem->quantity;
 
