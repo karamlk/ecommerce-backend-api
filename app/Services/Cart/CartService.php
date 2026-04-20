@@ -100,8 +100,10 @@ class CartService
     {
         return DB::transaction(function () use ($userId, $cartItemId) {
 
+            // TASK 1: Concurrent Access & Data Integrity
             $cartItem = CartItem::where('id', $cartItemId)
                 ->where('user_id', $userId)
+                ->lockForUpdate()
                 ->first();
 
             if (!$cartItem) {
@@ -118,7 +120,12 @@ class CartService
     {
         return DB::transaction(function () use ($userId) {
 
-            CartItem::where('user_id', $userId)->delete();
+            // TASK 1: Concurrent Access & Data Integrity
+            $cartItems = CartItem::where('user_id', $userId)->lockForUpdate()->get();
+
+            if ($cartItems->isNotEmpty()) {
+                CartItem::where('user_id', $userId)->delete();
+            }
 
             return true;
         });
