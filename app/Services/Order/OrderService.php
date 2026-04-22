@@ -23,11 +23,11 @@ class OrderService
             ->first();
     }
 
-    public function createOrderFromCart($userId)
+    public function createOrderFromCart($userId, $debug = false)
     {
         // TASK 2: Resource Management & Capacity Control - Cache::Lock
         return Cache::lock("checkout-global-limit", 5)
-            ->block(5, function () use ($userId) {
+            ->block(5, function () use ($userId, $debug) {
                 // TASK 1: Concurrent Access & Data Integrity
                 $cartItems = CartItem::where('user_id', $userId)->get();
 
@@ -35,7 +35,7 @@ class OrderService
                     return null;
                 }
 
-                return DB::transaction(function () use ($cartItems, $userId) {
+                return DB::transaction(function () use ($cartItems, $userId, $debug) {
 
                     $order = Order::create([
                         'user_id' => $userId,
@@ -43,7 +43,7 @@ class OrderService
                         'total' => $this->calculateCartTotal($cartItems),
                     ]);
 
-                    $this->processCartItems($order, $cartItems);
+                    $this->processCartItems($order, $cartItems, $debug);
                     $this->clearCart($cartItems);
 
                     return $order;
@@ -86,7 +86,7 @@ class OrderService
         });
     }
 
-    private function processCartItems($order, $cartItems)
+    private function processCartItems($order, $cartItems, $debug = false)
     {
         foreach ($cartItems as $cartItem) {
 
@@ -94,6 +94,10 @@ class OrderService
             $product = Product::where('id', $cartItem->product_id)
                 ->lockForUpdate()
                 ->first();
+
+            if ($debug) {
+                sleep(3);
+            }
 
             if ($product->stock < $cartItem->quantity) {
                 throw new \Exception('Not enough stock for product: ' . $product->id);
@@ -113,4 +117,54 @@ class OrderService
     {
         $cartItems->each->delete();
     }
+
+    //     public function createOrderFromCartWithoutLock($userId, $debug = false)
+    // {
+    //     // TASK 2: Resource Management & Capacity Control - Cache::Lock
+      
+    //             // TASK 1: Concurrent Access & Data Integrity
+    //             $cartItems = CartItem::where('user_id', $userId)->get();
+
+    //             if ($cartItems->isEmpty()) {
+    //                 return null;
+    //             }
+
+    //             return DB::transaction(function () use ($cartItems, $userId, $debug) {
+
+    //                 $order = Order::create([
+    //                     'user_id' => $userId,
+    //                     'status' => 'pending',
+    //                     'total' => $this->calculateCartTotal($cartItems),
+    //                 ]);
+
+    //                 $this->processCartItemsWithoutLock($order, $cartItems, $debug);
+    //                 $this->clearCart($cartItems);
+
+    //                 return $order;
+    //             });
+            
+    // }
+    // private function processCartItemsWithoutLock($order, $cartItems, $debug = false)
+    // {
+    //     foreach ($cartItems as $cartItem) {
+
+    //         // TASK 1: Concurrent Access & Data Integrity - lock product row
+    //         $product = Product::where('id', $cartItem->product_id)
+
+    //             ->first();
+
+    //         if ($debug) {
+    //             sleep(3);
+    //         }
+
+
+    //         $product->decrement('stock', $cartItem->quantity);
+
+    //         $order->items()->create([
+    //             'product_id' => $product->id,
+    //             'quantity' => $cartItem->quantity,
+    //             'price' => $product->price,
+    //         ]);
+    //     }
+    // }
 }
