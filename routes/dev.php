@@ -70,7 +70,7 @@ Route::get('/simulate-otp-load', function () {
 });
 
 
-// TK 2: Resource Management & Capacity Control - single OTP test
+// TK 2: Resource Management & Capacity Control -- single OTP test
 Route::get('/simulate-otp-single', function () {
 
     dispatch(new SendOtpJob(
