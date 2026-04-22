@@ -19,18 +19,31 @@ class CartService
     {
         return DB::transaction(function () use ($userId, $productId, $quantity) {
 
-            // TASK 1: Concurrent Access & Data Integrity
-            $product = Product::where('id', $productId)->lockForUpdate()->findOrFail($productId);
+            // Lock user cart rows
+            CartItem::where('user_id', $userId)->lockForUpdate()->get();
 
-            if ($product->stock < $quantity) {
-                throw new \Exception('Not enough stock');
-            }
-
-            // TASK 1: Concurrent Access & Data Integrity
             $cartItem = CartItem::where('user_id', $userId)
                 ->where('product_id', $productId)
                 ->lockForUpdate()
                 ->first();
+
+            if (!$cartItem) {
+                // TASK 2: Resource Management & Capacity Control
+                $cartCount = CartItem::where('user_id', $userId)->count();
+
+                if ($cartCount >= 50) {
+                    throw new \Exception('Cart capacity reached (Max 50 unique items).');
+                }
+            }
+
+            // TASK 1: Concurrent Access & Data Integrity
+            $product = Product::where('id', $productId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($product->stock < $quantity) {
+                throw new \Exception('Not enough stock');
+            }
 
             if ($cartItem) {
                 $newQuantity = $cartItem->quantity + $quantity;
@@ -39,9 +52,7 @@ class CartService
                     throw new \Exception('Not enough stock');
                 }
 
-                $cartItem->update([
-                    'quantity' => $newQuantity,
-                ]);
+                $cartItem->update(['quantity' => $newQuantity]);
             } else {
                 $cartItem = CartItem::create([
                     'user_id' => $userId,
@@ -57,12 +68,6 @@ class CartService
     public function updateCartItem($userId, $cartItemId, $newQuantity)
     {
         return DB::transaction(function () use ($userId, $cartItemId, $newQuantity) {
-
-            // TASK 2: Resource Management & Capacity Control - limit the cart capacity
-            $cartCount = CartItem::where('user_id', $userId)->count();
-            if ($cartCount >= 50) {
-                throw new \Exception('Cart capacity reached (Max 50 unique items).');
-            }
 
             // TASK 1: Concurrent Access & Data Integrity
             $cartItem = CartItem::with('product')
