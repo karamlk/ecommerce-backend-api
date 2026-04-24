@@ -19,7 +19,7 @@ class OrderServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->orderService = new OrderService();
+       $this->orderService = app(OrderService::class);
     }
 
     public function test_order_is_created_successfully_from_cart()

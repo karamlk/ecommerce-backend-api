@@ -127,6 +127,26 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'performance' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/performance.log'),
+            'level'  => 'info',
+          
+        ],
+
+        'activity' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/activity.log'),
+            'level'  => 'info',
+            'days'   => 7,
+        ],
+
+        'tracing' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/tracing.log'),
+            'level'  => 'info',
+            'days'   => 7,
+        ],
     ],
 
 ];
