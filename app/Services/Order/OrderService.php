@@ -71,27 +71,29 @@ class OrderService
 
     public function deleteOrder($order)
     {
-        return DB::transaction(function () use ($order) {
+        return $this->execution->run('OrderService::deleteOrder', function () use ($order) {
+            return DB::transaction(function () use ($order) {
 
-            // TASK 1: Concurrent Access & Data Integrity - Lock order items rows
-            $order->load(['items' => function ($query) {
-                $query->lockForUpdate();
-            }]);
+                // TASK 1: Concurrent Access & Data Integrity - Lock order items rows
+                $order->load(['items' => function ($query) {
+                    $query->lockForUpdate();
+                }]);
 
-            foreach ($order->items as $orderItem) {
+                foreach ($order->items as $orderItem) {
 
-                // TASK 1: Concurrent Access & Data Integrity
-                $product = Product::where('id', $orderItem->product_id)
-                    ->lockForUpdate()
-                    ->first();
+                    // TASK 1: Concurrent Access & Data Integrity
+                    $product = Product::where('id', $orderItem->product_id)
+                        ->lockForUpdate()
+                        ->first();
 
-                $product->increment('stock', $orderItem->quantity);
-            }
+                    $product->increment('stock', $orderItem->quantity);
+                }
 
-            $order->items()->delete();
-            $order->delete();
+                $order->items()->delete();
+                $order->delete();
 
-            return true;
+                return true;
+            });
         });
     }
 
