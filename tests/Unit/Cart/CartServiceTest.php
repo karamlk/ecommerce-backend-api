@@ -18,7 +18,7 @@ class CartServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new CartService();
+        $this->service = app(CartService::class);
     }
 
     public function test_it_adds_product_to_cart()
