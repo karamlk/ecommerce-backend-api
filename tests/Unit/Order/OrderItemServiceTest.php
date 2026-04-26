@@ -19,7 +19,7 @@ class OrderItemServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new OrderItemService();
+        $this->service = app(OrderItemService::class);
     }
 
     public function test_update_order_item_increases_quantity_and_decreases_stock()
