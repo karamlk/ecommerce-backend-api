@@ -24,7 +24,7 @@ class FavoriteServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new FavoriteService();
+        $this->service = app(FavoriteService::class);
 
         $this->user = User::factory()->create();
 
