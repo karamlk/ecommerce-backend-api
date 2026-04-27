@@ -11,19 +11,25 @@ class PerformanceAspect
     {
         $start        = microtime(true);
         $startMemory  = memory_get_usage();
-        $startQueries = count(DB::getQueryLog());
+        $beforeCount  = count(DB::getQueryLog()); // snapshot, never flush
 
         try {
             return $callback();
         } finally {
+            $duration = round((microtime(true) - $start) * 1000, 2);
+            $queries  = array_slice(DB::getQueryLog(), $beforeCount);
+
             Log::channel('performance')->info("[PERF] {$label}", [
-                'duration_ms' => round((microtime(true) - $start) * 1000, 2),
+                'duration_ms' => $duration,
                 'memory_kb'   => round((memory_get_usage() - $startMemory) / 1024, 1),
-                'queries'     => count(DB::getQueryLog()) - $startQueries,
+                'queries'     => count($queries),
                 'timestamp'   => now()->toDateTimeString(),
-                'trace_id' => app(TracingAspect::class)->getCurrentTraceId(),
+                'trace_id'    => app(TracingAspect::class)->getCurrentTraceId(),
             ]);
-            DB::flushQueryLog();
+
+            if ($duration > 500) {
+                Log::channel('performance')->warning("[SLOW] {$label} took {$duration}ms");
+            }
         }
     }
 }
