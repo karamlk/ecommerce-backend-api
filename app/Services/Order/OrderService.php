@@ -11,89 +11,72 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function __construct(private ExecutionAspect $execution) {}
-
     public function getUserOrders($userId)
     {
-        return $this->execution->run(
-            'OrderService::getUserOrders',
-            fn() => Order::where('user_id', $userId)->get()
-        );
+        return Order::where('user_id', $userId)->get();
     }
 
     public function getOrderWithItems($orderId, $userId)
     {
-        return $this->execution->run(
-            'OrderService::getOrderWithItems',
-            fn() => Order::with(['user', 'items.product'])
-                ->where('id', $orderId)
-                ->where('user_id', $userId)
-                ->first()
-        );
+        return Order::with(['user', 'items.product'])
+            ->where('id', $orderId)
+            ->where('user_id', $userId)
+            ->first();
     }
 
     public function createOrderFromCart($userId, $debug = false)
     {
-        return $this->execution->run(
-            'OrderService::createOrderFromCart',
-            function () use ($userId, $debug) {
+        // TASK 2: Resource Management & Capacity Control - Cache::Lock
+        return Cache::lock("checkout-global-limit", 5)
+            ->block(5, function () use ($userId, $debug) {
 
-                // TASK 2: Resource Management & Capacity Control - Cache::Lock
-                return Cache::lock("checkout-global-limit", 5)
-                    ->block(5, function () use ($userId, $debug) {
+                // TASK 1: Concurrent Access & Data Integrity
+                $cartItems = CartItem::where('user_id', $userId)->get();
 
-                        // TASK 1: Concurrent Access & Data Integrity
-                        $cartItems = CartItem::where('user_id', $userId)->get();
+                if ($cartItems->isEmpty()) {
+                    return null;
+                }
 
-                        if ($cartItems->isEmpty()) {
-                            return null;
-                        }
+                return DB::transaction(function () use ($cartItems, $userId, $debug) {
 
-                        return DB::transaction(function () use ($cartItems, $userId, $debug) {
+                    $order = Order::create([
+                        'user_id' => $userId,
+                        'status'  => 'pending',
+                        'total'   => $this->calculateCartTotal($cartItems),
+                    ]);
 
-                            $order = Order::create([
-                                'user_id' => $userId,
-                                'status'  => 'pending',
-                                'total'   => $this->calculateCartTotal($cartItems),
-                            ]);
+                    $this->processCartItems($order, $cartItems, $debug);
+                    $this->clearCart($cartItems);
 
-                            $this->processCartItems($order, $cartItems, $debug);
-                            $this->clearCart($cartItems);
-
-                            return $order;
-                        });
-                    });
-            }
-        );
+                    return $order;
+                });
+            });
     }
-
-
 
     public function deleteOrder($order)
     {
-        return $this->execution->run('OrderService::deleteOrder', function () use ($order) {
-            return DB::transaction(function () use ($order) {
 
-                // TASK 1: Concurrent Access & Data Integrity - Lock order items rows
-                $order->load(['items' => function ($query) {
-                    $query->lockForUpdate();
-                }]);
+        return DB::transaction(function () use ($order) {
 
-                foreach ($order->items as $orderItem) {
+            // TASK 1: Concurrent Access & Data Integrity - Lock order items rows
+            $order->load(['items' => function ($query) {
+                $query->lockForUpdate();
+            }]);
 
-                    // TASK 1: Concurrent Access & Data Integrity
-                    $product = Product::where('id', $orderItem->product_id)
-                        ->lockForUpdate()
-                        ->first();
+            foreach ($order->items as $orderItem) {
 
-                    $product->increment('stock', $orderItem->quantity);
-                }
+                // TASK 1: Concurrent Access & Data Integrity
+                $product = Product::where('id', $orderItem->product_id)
+                    ->lockForUpdate()
+                    ->first();
 
-                $order->items()->delete();
-                $order->delete();
+                $product->increment('stock', $orderItem->quantity);
+            }
 
-                return true;
-            });
+            $order->items()->delete();
+            $order->delete();
+
+            return true;
         });
     }
 
@@ -138,32 +121,28 @@ class OrderService
 
     public function createOrderFromCartWithoutLock($userId, $debug = false)
     {
-        return $this->execution->run(
-            'OrderService::createOrderFromCartWithoutLock',
-            function () use ($userId, $debug) {
 
-                // TASK 1: Concurrent Access & Data Integrity
-                $cartItems = CartItem::where('user_id', $userId)->get();
 
-                if ($cartItems->isEmpty()) {
-                    return null;
-                }
+        // TASK 1: Concurrent Access & Data Integrity
+        $cartItems = CartItem::where('user_id', $userId)->get();
 
-                return DB::transaction(function () use ($cartItems, $userId, $debug) {
+        if ($cartItems->isEmpty()) {
+            return null;
+        }
 
-                    $order = Order::create([
-                        'user_id' => $userId,
-                        'status'  => 'pending',
-                        'total'   => $this->calculateCartTotal($cartItems),
-                    ]);
+        return DB::transaction(function () use ($cartItems, $userId, $debug) {
 
-                    $this->processCartItemsWithoutLock($order, $cartItems, $debug);
-                    $this->clearCart($cartItems);
+            $order = Order::create([
+                'user_id' => $userId,
+                'status'  => 'pending',
+                'total'   => $this->calculateCartTotal($cartItems),
+            ]);
 
-                    return $order;
-                });
-            }
-        );
+            $this->processCartItemsWithoutLock($order, $cartItems, $debug);
+            $this->clearCart($cartItems);
+
+            return $order;
+        });
     }
 
     private function processCartItemsWithoutLock($order, $cartItems, $debug = false)
