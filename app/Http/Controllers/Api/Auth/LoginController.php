@@ -3,29 +3,23 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validated = $request->validate([
-            'identifier' => 'required|string', 
-            'password' => 'required|string|min:8',
-        ], [
-            'password.required' => 'Please enter a password.',
-            'password.min' => 'Your password must have at least 8 characters.',
-        ]);
+        $validated = $request->validated();
 
         $identifier = $validated['identifier'];
         $password = $validated['password'];
 
         $user = User::where('email', $identifier)
-                    ->orWhere('phone_number', $identifier)
-                    ->first();
+            ->orWhere('phone_number', $identifier)
+            ->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
             return response()->json(['error' => 'Invalid credentials.'], 401);
