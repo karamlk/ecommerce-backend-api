@@ -1,94 +1,129 @@
-#  Ecommerce  – Laravel REST API Backend
+# Ecommerce Backend API — Laravel 11
 
-A RESTful API backend for a ecommerce application, built using **Laravel**. This API allows users to browse products by category and store, manage their profiles, place and edit orders, maintain a favorites list, and verify their account via OTP email using **Gmail SMTP**.    
-Laravel Sanctum is used for secure token-based authentication,
-and the system also supports **Redis** queues for handling background jobs (like OTP emails and notifications) and **Laravel Horizon** for monitoring and managing queued jobs.
+<p align="center">
+  <b>Production-ready REST API with AOP architecture, concurrency control, and scalable queue processing</b>
+</p>
 
----
-
-##  Features
-
-- **Authentication**
-  - User registration and login
-  - OTP email verification via **Gmail SMTP**
-  - Token-based API security (Laravel Sanctum)
-
-- **User Profile**
-  - View and update profile info
-  - Upload or change avatar image
-
-- **Product Browsing**
-  - Browse product categories
-  - View stores under each category
-  - Browse products in a store
-  - View product details
-  - Search by product or store name
-
-- **Favorites**
-  - Add/remove products to/from favorites
-  - View favorites by product category
-
-- **Cart & Orders**
-  - Add/remove/edit products in the cart
-  - Place new orders
-  - Edit or cancel orders
-  - View past orders
-
-- **Stock Handling**
-  - Product stock is updated when:
-    - An order is delivered
-    - An order is canceled or removed
-
-- **Background Jobs**
-  - Queued email sending via Redis Queue
-  - Queue monitoring with Laravel Horizon    
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-11-red?style=for-the-badge&logo=laravel">
+  <img src="https://img.shields.io/badge/PHP-8%2B-blue?style=for-the-badge&logo=php">
+  <img src="https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge&logo=mysql">
+  <img src="https://img.shields.io/badge/Redis-Queue-critical?style=for-the-badge&logo=redis">
+  <img src="https://img.shields.io/badge/Horizon-Monitoring-purple?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Auth-Sanctum-green?style=for-the-badge">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge">
+</p>
 
 ---
 
-##  Tech Stack
+## Overview
 
-- **Laravel 11**
-- **MySQL**
-- **Redis** (for queue processing)
-- **Laravel Horizon** (queue monitoring dashboard)
-- **Laravel Sanctum**
-- **Gmail SMTP** (OTP delivery)
-- **Postman** (API testing)
+A scalable Laravel REST API powering a full e-commerce platform with a clean Service Layer architecture, Aspect-Oriented Programming (AOP) for cross-cutting concerns, concurrency-safe processing, and a Redis queue system monitored via Horizon.
 
 ---
 
-## Notes
+## Architecture
 
-- All routes for **authentication**, **profile**, **favorites**, **orders**, and **cart** are protected by `auth:sanctum`.  
-  Make sure the user is authenticated before accessing them.
+### Service Layer + AOP
 
-- Use **Laravel Sanctum** tokens for authentication in all secured requests.
+Business logic is isolated in dedicated services. Cross-cutting concerns are handled via a Decorator-based AOP simulation:
+
+- **Logging Aspect** — activity and error logging
+- **Performance Aspect** — execution time, memory, query count
+- **Tracing Aspect** — full request lifecycle (start → end)
+- **Error Handling Aspect** — centralized exception management
+- **Transaction Aspect** — atomic DB operations
+
+Services contain pure business logic only — no logging, no error handling, no transaction management mixed in.
 
 ---
 
-### ⚙️ Installation
+### Concurrency & Data Integrity
 
-## 1. Clone the Repository
+| Mechanism | Purpose |
+|---|---|
+| `Cache::lock()` | Global checkout throttling |
+| `DB::transaction()` | Atomic operations |
+| `lockForUpdate()` | Row-level locking |
+
+Prevents overselling and ensures consistency under concurrent requests.
+
+---
+
+### Observability
+
+Three dedicated log streams:
+
+| Log Type | Purpose |
+|---|---|
+| **Tracing** | Request lifecycle (start → end) |
+| **Activity** | Business events and failures |
+| **Performance** | Execution time, memory, query count |
+
+Enables before/after performance comparison and simplifies debugging of concurrency issues.
+
+---
+
+### Queue System
+
+Redis-backed queues with Laravel Horizon for monitoring. Handles OTP email delivery via Gmail SMTP. Decouples heavy operations from the request cycle and improves response time.
+
+---
+
+## Features
+
+**Authentication** — Registration, login, OTP email verification, Sanctum token-based auth
+
+**User Profile** — View, update profile, change avatar
+
+**Product Browsing** — Categories → Stores → Products, product details, search across products and stores
+
+**Favorites** — Add/remove favorites, organized by category
+
+**Cart** — Add/update/remove items, 50-item capacity limit, concurrency-safe updates
+
+**Orders** — Place and cancel orders, view history, automatic stock updates on delivery and cancellation
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Laravel 11 |
+| Language | PHP 8+ |
+| Database | MySQL |
+| Queues | Redis |
+| Monitoring | Laravel Horizon |
+| Auth | Sanctum |
+| Email | Gmail SMTP |
+| API Testing | Postman |
+
+---
+
+## Installation
+
+### 1. Clone
 
 ```bash
 git clone https://github.com/karamlk/ecommerce-backend-api.git
 cd ecommerce-backend-api
 ```
 
-## 2. Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 composer install
 ```
 
-## 3. Configure Environment Variables
+### 3. Configure Environment
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-Then edit `.env` and configure your database and Gmail SMTP credentials:
+Edit `.env` with your database and Gmail SMTP credentials:
 
 ```env
 DB_CONNECTION=mysql
@@ -120,57 +155,42 @@ php artisan db:seed
 
 ### 6. Start Services
 
-Make sure Redis is running:
-
 ```bash
 sudo service redis-server start
-```
-Then run the Laravel server:
-
-```bash
 php artisan serve
 ```
 
-### 7. Start Queue Worker or Horizon
+### 7. Start Queue Worker
 
-You can use either:
-- Basic queue worker:
+Basic worker:
 
 ```bash
 php artisan queue:work
 ```
 
-- Or start Laravel Horizon (recommended):
+Or Laravel Horizon (recommended):
+
 ```bash
 php artisan horizon
 ```
-Visit the Horizon dashboard at:
-http://localhost:8000/horizon
+
+Horizon dashboard: `http://localhost:8000/horizon`
 
 ---
 
-## 🖼️ Image Note
+## API Documentation
 
-📷 **Product**, **Store**, and **User** images are **not included** in this repository.
+Import the Postman collection included in the repository:
 
-The seeded data references image files located under:
+`postman/Ecommerce-Backend-api.postman_collection.json`
 
-- `storage/product_photos/`
-- `storage/profile_photos/`
-- `storage/store_photos/`
-
-If these image files are missing, the application will automatically display a **placeholder image** using a public service such as [https://placehold.co].
+All protected endpoints require:
+```bash
+Authorization: Bearer {token}
+```
 
 ---
 
-## 📝 API Documentation
+## Notes
 
-All API endpoints with examples are included in the Postman collection.  
-
-You can import it directly in Postman:
-
-1. Open Postman.
-2. Click **Import** → **File** → Select `postman/Ecommerce-Backend-api.postman_collection.json`.
-3. Start testing the endpoints.
-
-The collection file is located in the repository at: `postman/Ecommerce-Backend-api.postman_collection.json`.
+Product, store, and user images are not included in the repository. Seeded data references files under `storage/product_photos/`, `storage/profile_photos/`, and `storage/store_photos/`. Missing images fall back to a placeholder automatically.
