@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
+use App\Jobs\SendOrderConfirmationJob;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Services\Order\OrderService;
-
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -47,6 +49,19 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['message' => 'The cart is empty'], 400);
             }
+
+            // TASK 3: Asynchronous Queues
+            // Mail::to($order->user->email)
+            //     ->send(
+            //         new OrderConfirmationMail($order->id, $order->total, $order->status)
+            //     );
+            SendOrderConfirmationJob::dispatch(
+                $order->id,
+                $order->user_id,
+                (float) $order->total,
+                $order->status,
+                $order->user->email,
+            );
 
             return response()->json([
                 'message' => 'order has been added successfully'

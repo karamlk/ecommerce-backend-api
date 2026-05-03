@@ -1,9 +1,13 @@
 <?php
 
+use App\Jobs\SendOrderConfirmationJob;
 use App\Jobs\SendOtpJob;
+use App\Mail\OrderConfirmationMail;
+use App\Models\Order;
 use App\Services\Order\OrderService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 Route::prefix('dev')->group(function () {
 
@@ -82,5 +86,52 @@ Route::prefix('dev')->group(function () {
     Route::get('/demo-race-without/{id}', function ($id) {
         return app(OrderService::class)
             ->createOrderFromCartWithoutLock($id);
+    });
+
+    // TK 3: BEFORE — sync
+    Route::post('/simulate-order-sync', function (OrderService $orderService) {
+
+        $start = microtime(true);
+
+        $orderService->createOrderFromCart(auth('sanctum')->id());
+        $order = Order::latest()->first();
+
+        // Synchronous — blocks until email is sent
+        Mail::to($order->user->email)
+            ->send(
+                new OrderConfirmationMail($order->id, $order->total, $order->status)
+            );
+
+        $duration = round((microtime(true) - $start) * 1000, 2);
+
+        return response()->json([
+            'mode'        => 'BEFORE — synchronous',
+            'duration_ms' => $duration,
+        ]);
+    });
+
+    // TK 3: AFTER — async
+    Route::post('/simulate-order-async', function (\App\Services\Order\OrderService $orderService) {
+        
+        $start = microtime(true);
+
+        $orderService->createOrderFromCart(auth('sanctum')->id());
+        $order = Order::latest()->first();
+
+        // Async — just pushes to Redis, returns immediately
+        SendOrderConfirmationJob::dispatch(
+            $order->id,
+            $order->user_id,
+            (float) $order->total,
+            $order->status,
+            $order->user->email,
+        );
+
+        $duration = round((microtime(true) - $start) * 1000, 2);
+
+        return response()->json([
+            'mode'        => 'AFTER — async queue',
+            'duration_ms' => $duration,
+        ]);
     });
 });
