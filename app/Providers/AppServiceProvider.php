@@ -2,21 +2,15 @@
 
 namespace App\Providers;
 
-use App\Aspects\ExecutionAspect;
 use App\Aspects\TracingAspect;
-use App\Aspects\TransactionAspect;
-use App\Decorators\CartServiceDecorator;
-use App\Decorators\FavoriteServiceDecorator;
-use App\Decorators\OrderServiceDecorator;
-use App\Decorators\ProfileServiceDecorator;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
+use App\Observers\CartItemObserver;
 use App\Observers\OrderObserver;
 use App\Observers\ProductObserver;
-use App\Services\Cart\CartService;
-use App\Services\Favorite\FavoriteService;
-use App\Services\Order\OrderService;
-use App\Services\Profile\ProfileService;
+use App\Observers\UserObserver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,38 +22,6 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(TracingAspect::class);
-
-        $this->app->bind(OrderService::class, function ($app) {
-            return new OrderServiceDecorator(
-                new OrderService(),
-                $app->make(ExecutionAspect::class),
-                $app->make(TransactionAspect::class),
-            );
-        });
-
-        $this->app->bind(CartService::class, function ($app) {
-            return new CartServiceDecorator(
-                new CartService(),
-                $app->make(ExecutionAspect::class),
-                $app->make(TransactionAspect::class),
-            );
-        });
-
-        $this->app->bind(FavoriteService::class, function ($app) {
-            return new FavoriteServiceDecorator(
-                new FavoriteService(),
-                $app->make(ExecutionAspect::class),
-                $app->make(TransactionAspect::class),
-            );
-        });
-
-        $this->app->bind(ProfileService::class, function ($app) {
-            return new ProfileServiceDecorator(
-                new ProfileService(),
-                $app->make(ExecutionAspect::class),
-                $app->make(TransactionAspect::class),
-            );
-        });
     }
 
     /**
@@ -73,5 +35,7 @@ class AppServiceProvider extends ServiceProvider
 
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
+        User::observe(UserObserver::class);       
+        CartItem::observe(CartItemObserver::class);
     }
 }
