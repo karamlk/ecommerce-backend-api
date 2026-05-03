@@ -18,7 +18,7 @@ class ProfileServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ProfileService();
+        $this->service = app(ProfileService::class);
     }
 
     public function test_it_returns_user_profile()
