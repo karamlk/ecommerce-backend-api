@@ -21,10 +21,10 @@ class PerformanceAspect
 
             Log::channel('performance')->info("[PERF] {$label}", [
                 'duration_ms' => $duration,
-                'memory_kb'   => round((memory_get_usage() - $startMemory) / 1024, 1),
-                'queries'     => count($queries),
-                'timestamp'   => now()->toDateTimeString(),
-                'trace_id'    => app(TracingAspect::class)->getCurrentTraceId(),
+                'memory_delta_kb' => round((memory_get_usage() - $startMemory) / 1024, 1),
+                'queries' => count($queries),
+                'timestamp' => now()->toDateTimeString(),
+                'trace_id' => app(TracingAspect::class)->getCurrentTraceId(),
             ]);
 
             if ($duration > 500) {
