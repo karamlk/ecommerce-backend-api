@@ -28,6 +28,7 @@ class ErrorHandlingAspect
                 'message'   => $e->getMessage(),
                 'file'      => $e->getFile(),
                 'line'      => $e->getLine(),
+                'trace_id' => app(TracingAspect::class)->getCurrentTraceId(),
             ]);
             throw $e;
         }
