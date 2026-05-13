@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\Order\DailySalesService;
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,14 +23,37 @@ class ProcessDailySalesJob implements ShouldQueue
         $this->onQueue('sales');
     }
 
-    public function handle(DailySalesService $service): void
+    public function handle(): void
     {
-        $result = $service->process(now()->toDateString());
+        $date        = now()->toDateString();
+        $chunkNumber = 0;
 
-        Log::channel('activity')->info(
-            '[DAILY SALES] Processing complete',
-            $result
-        );
+        Log::channel('activity')->info('[DAILY SALES] Orchestrator started', [
+            'date' => $date,
+        ]);
+
+        Order::where('status', 'completed')
+            ->whereDate('created_at', $date)
+            ->select('id')
+            ->chunkById(100, function ($orders) use (&$chunkNumber, $date) {
+                $chunkNumber++;
+
+                ProcessSalesChunkJob::dispatch(
+                    $orders->pluck('id')->toArray(),
+                    $chunkNumber,
+                    $date,
+                );
+
+                Log::channel('activity')->info("[DAILY SALES] Chunk {$chunkNumber} dispatched", [
+                    'orders' => $orders->count(),
+                    'date'   => $date,
+                ]);
+            });
+
+        Log::channel('activity')->info('[DAILY SALES] All chunks dispatched', [
+            'total_chunks' => $chunkNumber,
+            'date'         => $date,
+        ]);
     }
 
     public function failed(\Throwable $exception): void
