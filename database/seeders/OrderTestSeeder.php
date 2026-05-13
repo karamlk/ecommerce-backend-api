@@ -18,13 +18,13 @@ class OrderTestSeeder extends Seeder
     public function run(): void
     {
         $user = User::firstOrCreate(
-            ['email' => 'james@example.com'],
+            ['email' => 'john@example.com'],
             [
                 'first_name'    => 'Benchmark',
                 'last_name'     => 'User',
                 'location'      => 'Damascus',
                 'phone_number'  => '0999999999',
-                'email'         => 'karammuskaure3108@gmail.com',
+                'email'         => 'john@example.com',
                 'password'      => Hash::make('password'),
                 'profile_photo' => null,
             ]

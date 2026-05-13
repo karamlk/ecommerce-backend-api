@@ -9,7 +9,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
         api: __DIR__ . '/../routes/api.php',
-          then: function () {
+        commands: __DIR__ . '/../routes/console.php',
+        then: function () {
             if (app()->environment('local')) {
                 require base_path('routes/dev.php');
             }

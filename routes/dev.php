@@ -5,6 +5,7 @@ use App\Jobs\SendOrderConfirmationJob;
 use App\Jobs\SendOtpJob;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
+use App\Models\User;
 use App\Services\Order\DailySalesService;
 use App\Services\Order\OrderService;
 use Illuminate\Support\Facades\Route;
@@ -137,90 +138,29 @@ Route::prefix('dev')->group(function () {
         ]);
     });
 
-    // BEFORE — loads everything at once
-    Route::get('/simulate-sales-without-chunks2', function () {
+    // TK 4: Batch Processing
+    Route::get('/simulate-order-queue', function () {
 
-        // for clean start
-        gc_collect_cycles();
-        $memoryBefore = memory_get_usage();
-        $start        = microtime(true);
+        $users = User::whereIn('email', [
+            'john1@example.com',
+            'john2@example.com',
+            'john3@example.com'
+        ])->get();
 
-        $orders = Order::with('items')
-            ->where('status', 'completed')
-            ->whereBetween('created_at', [
-                now()->startOfDay(),
-                now()->endOfDay(),
-            ])
-            ->get();
+        Http::pool(fn($pool) => [
 
-        $totalRevenue = 0;
-        $totalItems   = 0;
+            $pool->withToken($users[0]->createToken('test')->plainTextToken)
+                ->post(url('/api/orders')),
 
-        foreach ($orders as $order) {
-            $totalRevenue += $order->total;
-            $totalItems   += $order->items->sum('quantity');
-        }
+            $pool->withToken($users[1]->createToken('test')->plainTextToken)
+                ->post(url('/api/orders')),
 
-        $memoryUsed = memory_get_usage() - $memoryBefore;
-
-        return response()->json([
-            'mode'          => 'BEFORE — no chunks',
-            'total_orders'  => $orders->count(),
-            'total_revenue' => round($totalRevenue, 2),
-            'total_items'   => $totalItems,
-            'duration_ms'   => round((microtime(true) - $start) * 1000, 2),
-            'memory_used_kb' => round($memoryUsed / 1024, 1),
+            $pool->withToken($users[2]->createToken('test')->plainTextToken)
+                ->post(url('/api/orders')),
         ]);
-    });
-
-    // AFTER — chunks of 100
-    Route::get('/simulate-sales-with-chunks2', function () {
-
-        gc_collect_cycles();
-        $memoryBefore = memory_get_usage();
-        $start        = microtime(true);
-
-        $totalRevenue = 0;
-        $totalItems   = 0;
-        $totalOrders  = 0;
-        $peakDelta    = 0;
-
-        Order::with('items')
-            ->where('status', 'completed')
-            ->whereBetween('created_at', [
-                now()->startOfDay(),
-                now()->endOfDay(),
-            ])
-            ->chunkById(100, function ($orders) use (
-                &$totalRevenue,
-                &$totalItems,
-                &$totalOrders,
-                &$peakDelta,
-                $memoryBefore,
-            ) {
-                foreach ($orders as $order) {
-                    $totalRevenue += $order->total;
-                    $totalItems   += $order->items->sum('quantity');
-                    $totalOrders++;
-                }
-
-                $delta = memory_get_usage() - $memoryBefore;
-                if ($delta > $peakDelta) {
-                    $peakDelta = $delta;
-                }
-
-                // Free memory before next chunk
-                unset($orders);
-                gc_collect_cycles();
-            });
 
         return response()->json([
-            'mode'           => 'AFTER — chunks of 100',
-            'total_orders'   => $totalOrders,
-            'total_revenue'  => round($totalRevenue, 2),
-            'total_items'    => $totalItems,
-            'duration_ms'    => round((microtime(true) - $start) * 1000, 2),
-            'memory_used_kb' => round($peakDelta / 1024, 1),
+            'message' => '3 concurrent order requests executed.',
         ]);
     });
 });
