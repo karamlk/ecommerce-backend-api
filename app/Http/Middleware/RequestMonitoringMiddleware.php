@@ -17,6 +17,14 @@ class RequestMonitoringMiddleware
         $start   = microtime(true);
         $traceId = $this->tracing->startTrace();
 
+        $port   = $request->server('SERVER_PORT');
+        $server = match ($port) {
+            '8001'  => 'server-1',
+            '8002'  => 'server-2',
+            '8003'  => 'server-3',
+            default => 'server-main',
+        };
+
         $response = $next($request);
 
         $duration = round((microtime(true) - $start) * 1000, 2);
@@ -26,11 +34,13 @@ class RequestMonitoringMiddleware
             'method'      => $request->method(),
             'url'         => $request->path(),
             'status_code' => $response->getStatusCode(),
+            'server'      => $server,
             'duration_ms' => $duration,
         ]);
 
         $response->headers->set('X-Trace-Id', $traceId);
         $response->headers->set('X-Duration-Ms', $duration);
+        $response->headers->set('X-Handled-By', $server);
 
         return $response;
     }

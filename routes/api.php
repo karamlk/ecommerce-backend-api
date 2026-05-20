@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/search', SearchController::class);
 
-     Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{orderId}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::delete('/orders/{orderId}', [OrderController::class, 'destroy']);
@@ -57,3 +57,12 @@ Route::post('/verify-otp', [RegisterController::class, 'verifyOtp'])->middleware
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+
+// for load balancer demo - task 5
+Route::get('/ping', function () {
+    return response()->json([
+        'status' => 'ok',
+        'server' => request()->getPort(),
+        'timestamp' => now()->toDateTimeString(),
+    ]);
+});
