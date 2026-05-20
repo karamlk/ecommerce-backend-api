@@ -6,6 +6,7 @@ use App\Jobs\SendOtpJob;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\Infrastructure\LoadBalancerService;
 use App\Services\Order\DailySalesService;
 use App\Services\Order\OrderService;
 use Illuminate\Support\Facades\Route;
@@ -114,7 +115,7 @@ Route::prefix('dev')->group(function () {
     });
 
     // TK 3: AFTER — async
-    Route::post('/simulate-order-async', function (\App\Services\Order\OrderService $orderService) {
+    Route::post('/simulate-order-async', function (OrderService $orderService) {
 
         $start = microtime(true);
 
@@ -161,6 +162,34 @@ Route::prefix('dev')->group(function () {
 
         return response()->json([
             'message' => '3 concurrent order requests executed.',
+        ]);
+    });
+
+    // TK 5: Weighted Load Distribution
+    Route::get('/simulate-load-balancer', function (
+        LoadBalancerService $lb
+    ) {
+
+        $results = Http::pool(function ($pool) use ($lb) {
+
+            $requests = [];
+
+            for ($i = 1; $i <= 18; $i++) {
+
+                $server = $lb->nextServer();
+
+                $requests[] = $pool->get(
+                    $server['url'] . '/api/ping'
+                );
+            }
+
+            return $requests;
+        });
+
+        return response()->json([
+            'strategy' => 'Weighted Round Robin',
+            'requests' => count($results),
+            'note'     => 'Concurrent weighted distribution completed',
         ]);
     });
 });

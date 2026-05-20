@@ -11,6 +11,7 @@ use App\Observers\CartItemObserver;
 use App\Observers\OrderObserver;
 use App\Observers\ProductObserver;
 use App\Observers\UserObserver;
+use App\Services\Infrastructure\LoadBalancerService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(TracingAspect::class);
+        $this->app->singleton(LoadBalancerService::class);
+
     }
 
     /**
