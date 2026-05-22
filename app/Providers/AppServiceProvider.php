@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Aspects\CacheAspect;
 use App\Aspects\TracingAspect;
 use App\Models\CartItem;
 use App\Models\Order;
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(TracingAspect::class);
         $this->app->singleton(LoadBalancerService::class);
+        $this->app->singleton(CacheAspect::class);
 
     }
 

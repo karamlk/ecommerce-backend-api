@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{categoryId}/stores', [StoreController::class, 'index']);
     Route::get('/stores/{storeId}/products', [ProductController::class, 'index']);
+    Route::get('/stores/{storeId}/products/trending',[ProductController::class, 'trending']);
     Route::get('/stores/{storeId}/products/{productId}', [ProductController::class, 'show']);
 
     //To show x number of products at the home page

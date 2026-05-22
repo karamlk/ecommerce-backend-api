@@ -1,14 +1,15 @@
 <?php
 
-use App\Jobs\ProcessDailySalesJob;
 use App\Jobs\SendOrderConfirmationJob;
 use App\Jobs\SendOtpJob;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use App\Services\Infrastructure\LoadBalancerService;
-use App\Services\Order\DailySalesService;
 use App\Services\Order\OrderService;
+use App\Services\Product\ProductService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -190,6 +191,66 @@ Route::prefix('dev')->group(function () {
             'strategy' => 'Weighted Round Robin',
             'requests' => count($results),
             'note'     => 'Concurrent weighted distribution completed',
+        ]);
+    });
+    
+    Route::get('/cache-before', function () {
+
+        DB::flushQueryLog();
+        gc_collect_cycles();
+
+        $start = microtime(true);
+        $startMemory = memory_get_usage();
+
+        for ($i = 1; $i <= 10; $i++) {
+
+            Product::findOrFail(1);
+        }
+
+        $duration = round(
+            (microtime(true) - $start) * 1000,
+            2
+        );
+
+        return response()->json([
+            'mode'            => 'BEFORE - no cache',
+            'requests'        => 10,
+            'queries'         => count(DB::getQueryLog()),
+            'duration_ms'     => $duration,
+            'memory_used_kb'  => round(
+                (memory_get_usage() - $startMemory) / 1024,
+                1
+            ),
+        ]);
+    });
+
+
+    Route::get('/cache-after', function (
+        ProductService $service
+    ) {
+
+        $start = microtime(true);
+        $startMemory = memory_get_usage();
+
+        for ($i = 1; $i <= 10; $i++) {
+
+            $service->getProduct(1, 1);
+        }
+
+        $duration = round(
+            (microtime(true) - $start) * 1000,
+            2
+        );
+
+        return response()->json([
+            'mode'            => 'AFTER - distributed cache',
+            'requests'        => 10,
+            'queries'         => count(DB::getQueryLog()),
+            'duration_ms'     => $duration,
+            'memory_used_kb'  => round(
+                (memory_get_usage() - $startMemory) / 1024,
+                1
+            ),
         ]);
     });
 });
