@@ -14,15 +14,12 @@ use App\Models\Favorite;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens,HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
     // public function orders()
     // {
     //     return $this->hasMany(Order::class);
     // }
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -35,7 +32,8 @@ class User extends Authenticatable
         'phone_number',
         'email',
         'password',
-        'profile_photo'
+        'profile_photo',
+        'role',
     ];
 
     /**
@@ -60,5 +58,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-   
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }
