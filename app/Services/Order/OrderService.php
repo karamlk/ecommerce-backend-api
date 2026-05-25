@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Aspects\DistributedLockAspect;
 use App\Aspects\ExecutionAspect;
 use App\Models\CartItem;
 use App\Models\Order;
@@ -11,7 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function __construct(private ExecutionAspect $execution) {}
+    public function __construct(
+        private ExecutionAspect      $execution,
+        private DistributedLockAspect $distributedLock,
+    ) {}
 
     public function getUserOrders($userId)
     {
@@ -108,26 +112,35 @@ class OrderService
     {
         foreach ($cartItems as $cartItem) {
 
-            // TASK 1: Concurrent Access & Data Integrity - lock product row
-            $product = Product::where('id', $cartItem->product_id)
-                ->lockForUpdate()
-                ->first();
+            // TASK 7: Distributed lock
+            $this->distributedLock->acquire(
+                "stock-lock:product:{$cartItem->product_id}",
+                function () use ($cartItem, $order, $debug) {
 
-            if ($debug) {
-                sleep(3);
-            }
+                    if ($debug) sleep(3);
 
-            if ($product->stock < $cartItem->quantity) {
-                throw new \Exception('Not enough stock for product: ' . $product->id);
-            }
+                    // TASK 1: DB pessimistic lock
+                    $product = Product::where('id', $cartItem->product_id)
+                        ->lockForUpdate()
+                        ->first();
 
-            $product->decrement('stock', $cartItem->quantity);
+                    if ($product->stock < $cartItem->quantity) {
+                        throw new \Exception(
+                            'Not enough stock for product: ' . $product->id
+                        );
+                    }
+                    
+                    $product->decrement('stock', $cartItem->quantity);
 
-            $order->items()->create([
-                'product_id' => $product->id,
-                'quantity' => $cartItem->quantity,
-                'price' => $product->price,
-            ]);
+                    $order->items()->create([
+                        'product_id' => $product->id,
+                        'quantity'   => $cartItem->quantity,
+                        'price'      => $product->price,
+                    ]);
+                },
+                lockSeconds: 10,
+                waitSeconds: 10,
+            );
         }
     }
 
