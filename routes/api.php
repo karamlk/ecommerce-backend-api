@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{categoryId}/stores', [StoreController::class, 'index']);
     Route::get('/stores/{storeId}/products', [ProductController::class, 'index']);
-    Route::get('/stores/{storeId}/products/trending',[ProductController::class, 'trending']);
+    Route::get('/stores/{storeId}/products/trending', [ProductController::class, 'trending']);
     Route::get('/stores/{storeId}/products/{productId}', [ProductController::class, 'show']);
 
     //To show x number of products at the home page
@@ -49,6 +49,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/favorites', [FavoriteController::class, 'store']);
     Route::delete('/favorites', [FavoriteController::class, 'destroy']);
+});
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/products/{productId}', [ProductController::class, 'update']);
 });
 
 // TASK 2: Resource Management & Capacity Control - throttle

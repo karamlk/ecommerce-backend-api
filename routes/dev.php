@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\Infrastructure\LoadBalancerService;
 use App\Services\Order\OrderService;
 use App\Services\Product\ProductService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
@@ -193,7 +194,8 @@ Route::prefix('dev')->group(function () {
             'note'     => 'Concurrent weighted distribution completed',
         ]);
     });
-    
+
+    // TK 6
     Route::get('/cache-before', function () {
 
         DB::flushQueryLog();
@@ -224,7 +226,7 @@ Route::prefix('dev')->group(function () {
         ]);
     });
 
-
+    // TK 6
     Route::get('/cache-after', function (
         ProductService $service
     ) {
@@ -252,5 +254,84 @@ Route::prefix('dev')->group(function () {
                 1
             ),
         ]);
+    });
+
+    Route::get('/simulate-optimistic-before', function (
+        ProductService $service
+    ) {
+
+        Http::pool(fn($pool) => [
+
+            $pool->as('r1')->post(
+                'http://127.0.0.1:8001/dev/update-product-before/1',
+                [
+                    'price' => 150
+                ]
+            ),
+
+            $pool->as('r2')->post(
+                'http://127.0.0.1:8001/dev/update-product-before/1',
+                [
+                    'price' => 200
+                ]
+            ),
+        ]);
+
+        return response()->json([
+            'message' => 'Concurrent updates WITHOUT optimistic locking executed'
+        ]);
+    });
+
+    Route::post('/update-product-before/{id}', function (
+        $id,
+        Request $request,
+        ProductService $service
+    ) {
+
+        return $service->updateProductWithoutOptimisticLock(
+            $id,
+            $request->all()
+        );
+    });
+
+    Route::get('/simulate-optimistic-after', function (
+        LoadBalancerService $lb
+    ) {
+
+        Http::pool(function ($pool) use ($lb) {
+
+            return [
+
+                $pool->as('r1')->post(
+                    'http://127.0.0.1:8001/dev/update-product-after/1',
+                    [
+                        'price' => 150
+                    ]
+                ),
+
+                $pool->as('r2')->post(
+                    'http://127.0.0.1:8002/dev/update-product-after/1',
+                    [
+                        'price' => 200
+                    ]
+                ),
+            ];
+        });
+
+        return response()->json([
+            'message' => 'Optimistic locking simulation executed'
+        ]);
+    });
+
+    Route::post('/update-product-after/{id}', function (
+        $id,
+        Request $request,
+        ProductService $service
+    ) {
+
+        return $service->updateProduct(
+            $id,
+            $request->all()
+        );
     });
 });
