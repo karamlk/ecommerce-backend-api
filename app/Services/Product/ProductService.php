@@ -5,6 +5,8 @@ namespace App\Services\Product;
 use App\Aspects\CacheAspect;
 use App\Aspects\ExecutionAspect;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class ProductService
@@ -28,6 +30,7 @@ class ProductService
         );
     }
 
+    // Task 6: Distributed caching
     public function getProduct(int $storeId, int $productId): mixed
     {
         Redis::zincrby(
@@ -54,7 +57,7 @@ class ProductService
         return $this->getTrendingProducts(10);
     }
 
-
+    // Task 6: Distributed caching
     public function getTrendingProducts(int $limit = 10): mixed
     {
 
@@ -87,6 +90,67 @@ class ProductService
         );
     }
 
+    public function updateProduct(int $productId, array $data): bool
+    {
+        return $this->execution->run(
+            'ProductService::updateProduct',
+            function () use ($productId, $data) {
+
+                $product = Product::findOrFail($productId);
+                sleep(3);
+                // TASK 7: Optimistic Locking
+                $affected = DB::table('products')
+                    ->where('id', $productId)
+                    ->where('version', $product->version)
+                    ->update(array_merge($data, [
+                        'version' => $product->version + 1,
+                    ]));
+
+                if ($affected === 0) {
+                    throw new \Exception(
+                        'Product was modified by another request. Please try again.'
+                    );
+                }
+
+                $this->invalidateProductCache($productId, $product->store_id);
+
+                Log::channel('activity')->info('[OPTIMISTIC LOCK] Product updated', [
+                    'product_id' => $productId,
+                    'version'    => $product->version + 1,
+                    'changed'    => array_keys($data),
+                ]);
+
+                return true;
+            }
+        );
+    }
+
+    public function updateProductWithoutOptimisticLock(int $productId, array $data): bool
+    {
+        return $this->execution->run(
+            'ProductService::updateProductWithoutOptimisticLock',
+            function () use ($productId, $data) {
+
+                $product = Product::findOrFail($productId);
+
+                sleep(3);
+
+                $product->update($data);
+
+                Log::channel('activity')->info(
+                    '[NO LOCK] Product updated',
+                    [
+                        'product_id' => $productId,
+                        'data' => $data,
+                    ]
+                );
+
+                return true;
+            }
+        );
+    }
+
+    // Task 6: Distributed caching
     public function invalidateProductCache(int $storeId, int $productId): void
     {
         $this->cache->forget("product:{$storeId}:{$productId}");

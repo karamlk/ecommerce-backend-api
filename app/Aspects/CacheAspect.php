@@ -5,6 +5,7 @@ namespace App\Aspects;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
+// Task 6: Distributed caching
 class CacheAspect
 {
     public function remember(string $key, int $ttl, callable $callback): mixed
