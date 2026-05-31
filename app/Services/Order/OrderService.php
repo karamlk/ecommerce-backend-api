@@ -4,17 +4,21 @@ namespace App\Services\Order;
 
 use App\Aspects\DistributedLockAspect;
 use App\Aspects\ExecutionAspect;
+use App\Aspects\TransactionAspect;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\Payment\PaymentService;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
     public function __construct(
         private ExecutionAspect      $execution,
         private DistributedLockAspect $distributedLock,
+        private PaymentService        $payment,
+        private TransactionAspect $transaction
+
     ) {}
 
     public function getUserOrders($userId)
@@ -53,13 +57,16 @@ class OrderService
                             return null;
                         }
 
-                        return DB::transaction(function () use ($cartItems, $userId, $debug) {
+                        // TASK 8: ACID Transaction
+                        return $this->transaction->run(function () use ($cartItems, $userId, $debug) {
 
                             $order = Order::create([
                                 'user_id' => $userId,
                                 'status'  => 'pending',
                                 'total'   => $this->calculateCartTotal($cartItems),
                             ]);
+
+                            $this->payment->processPayment($userId, $order->total);
 
                             $this->processCartItems($order, $cartItems, $debug);
                             $this->clearCart($cartItems);
@@ -76,7 +83,9 @@ class OrderService
     public function deleteOrder($order)
     {
         return $this->execution->run('OrderService::deleteOrder', function () use ($order) {
-            return DB::transaction(function () use ($order) {
+
+            // TASK 8: ACID Transaction
+            return $this->transaction->run(function () use ($order) {
 
                 // TASK 1: Concurrent Access & Data Integrity - Lock order items rows
                 $order->load(['items' => function ($query) {
@@ -129,7 +138,7 @@ class OrderService
                             'Not enough stock for product: ' . $product->id
                         );
                     }
-                    
+
                     $product->decrement('stock', $cartItem->quantity);
 
                     $order->items()->create([
@@ -162,7 +171,7 @@ class OrderService
                     return null;
                 }
 
-                return DB::transaction(function () use ($cartItems, $userId, $debug) {
+                return $this->transaction->run(function () use ($cartItems, $userId, $debug) {
 
                     $order = Order::create([
                         'user_id' => $userId,
@@ -170,6 +179,7 @@ class OrderService
                         'total'   => $this->calculateCartTotal($cartItems),
                     ]);
 
+                    $this->payment->processPayment($userId, $order->total);
                     $this->processCartItemsWithoutLock($order, $cartItems, $debug);
                     $this->clearCart($cartItems);
 

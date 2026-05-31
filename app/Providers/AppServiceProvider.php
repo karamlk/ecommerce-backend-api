@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Aspects\CacheAspect;
 use App\Aspects\TracingAspect;
+use App\Aspects\TransactionAspect;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
@@ -25,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(TracingAspect::class);
         $this->app->singleton(LoadBalancerService::class);
+        $this->app->singleton(TransactionAspect::class);
         $this->app->singleton(CacheAspect::class);
-
     }
 
     /**
@@ -40,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
 
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
-        User::observe(UserObserver::class);       
+        User::observe(UserObserver::class);
         CartItem::observe(CartItemObserver::class);
     }
 }

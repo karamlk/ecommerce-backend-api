@@ -3,13 +3,13 @@
 namespace App\Services\Cart;
 
 use App\Aspects\ExecutionAspect;
+use App\Aspects\TransactionAspect;
 use App\Models\CartItem;
 use App\Models\Product;
-use Illuminate\Support\Facades\DB;
 
 class CartService
 {
-    public function __construct(private ExecutionAspect $execution) {}
+    public function __construct(private ExecutionAspect $execution, private TransactionAspect $transaction) {}
 
     public function getUserCart($userId)
     {
@@ -28,7 +28,9 @@ class CartService
         return $this->execution->run(
             'CartService::addToCart',
             function () use ($userId, $productId, $quantity) {
-                return DB::transaction(function () use ($userId, $productId, $quantity) {
+
+                // Task 8: ACID Transaction
+                return $this->transaction->run(function () use ($userId, $productId, $quantity) {
 
                     // Lock user cart rows
                     CartItem::where('user_id', $userId)->lockForUpdate()->get();
@@ -83,7 +85,9 @@ class CartService
         return $this->execution->run(
             'CartService::updateCartItem',
             function () use ($userId, $cartItemId, $newQuantity) {
-                return DB::transaction(function () use ($userId, $cartItemId, $newQuantity) {
+
+                // Task 8: ACID Transaction
+                return $this->transaction->run(function () use ($userId, $cartItemId, $newQuantity) {
 
                     // TASK 1: Concurrent Access & Data Integrity
                     $cartItem = CartItem::with('product')
@@ -124,7 +128,9 @@ class CartService
         return $this->execution->run(
             'CartService::removeCartItem',
             function () use ($userId, $cartItemId) {
-                return DB::transaction(function () use ($userId, $cartItemId) {
+
+                // Task 8: ACID Transaction
+                return $this->transaction->run(function () use ($userId, $cartItemId) {
 
                     // TASK 1: Concurrent Access & Data Integrity
                     $cartItem = CartItem::where('id', $cartItemId)
@@ -149,7 +155,9 @@ class CartService
         return $this->execution->run(
             'CartService::clearCart',
             function () use ($userId) {
-                return DB::transaction(function () use ($userId) {
+
+                // Task 8: ACID Transaction
+                return $this->transaction->run(function () use ($userId) {
 
                     // TASK 1: Concurrent Access & Data Integrity
                     $cartItems = CartItem::where('user_id', $userId)->lockForUpdate()->get();
