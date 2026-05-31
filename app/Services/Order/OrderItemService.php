@@ -3,13 +3,13 @@
 namespace App\Services\Order;
 
 use App\Aspects\ExecutionAspect;
+use App\Aspects\TransactionAspect;
 use App\Models\OrderItem;
 use App\Models\Product;
-use Illuminate\Support\Facades\DB;
 
 class OrderItemService
 {
-    public function __construct(private ExecutionAspect $execution) {}
+    public function __construct(private ExecutionAspect $execution, private TransactionAspect $transaction) {}
 
     public function getItem($itemId)
     {
@@ -24,7 +24,9 @@ class OrderItemService
         return $this->execution->run(
             'OrderItemService::updateItem',
             function () use ($itemId, $newQuantity) {
-                return DB::transaction(function () use ($itemId, $newQuantity) {
+
+                // Task 8: ACID Transaction
+                return $this->transaction->run(function () use ($itemId, $newQuantity) {
 
                     $orderItem = OrderItem::with(['product', 'order.items'])->find($itemId);
 
@@ -77,7 +79,9 @@ class OrderItemService
         return $this->execution->run(
             'OrderItemService::deleteItem',
             function () use ($itemId) {
-                return DB::transaction(function () use ($itemId) {
+
+                // Task 8: ACID Transaction
+                return $this->transaction->run(function () use ($itemId) {
 
                     $orderItem = OrderItem::with(['product', 'order.items'])->find($itemId);
 
