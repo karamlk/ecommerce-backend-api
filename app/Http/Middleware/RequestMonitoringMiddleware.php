@@ -34,7 +34,7 @@ class RequestMonitoringMiddleware
             'method'      => $request->method(),
             'url'         => $request->path(),
             'status_code' => $response->getStatusCode(),
-            'server'      => $server,
+            'port' => $port,
             'duration_ms' => $duration,
         ]);
 

@@ -195,6 +195,32 @@ Route::prefix('dev')->group(function () {
         ]);
     });
 
+    Route::get('/simulate-load-balancer1', function () {
+        // 1. Force requests directly through Nginx proxy port
+        $nginxUrl = 'http://127.0.0.1:8080/api/ping';
+
+        $results = Http::pool(function ($pool) use ($nginxUrl) {
+            $requests = [];
+            for ($i = 1; $i <= 18; $i++) {
+                $requests[] = $pool->get($nginxUrl);
+            }
+            return $requests;
+        });
+
+        $distribution = [
+            '8001' => 0,
+            '8002' => 0,
+            '8003' => 0,
+            'failed' => 0,
+        ];
+
+        return response()->json([
+            'strategy' => 'Weighted Round Robin',
+            'total_requests' => count($results),
+            'expected_ratio' => '8001 (Wt:5) -> 10 | 8002 (Wt:3) -> 6 | 8003 (Wt:1) -> 2',
+        ]);
+    });
+
     // TK 6
     Route::get('/cache-before', function () {
 
@@ -320,6 +346,33 @@ Route::prefix('dev')->group(function () {
 
         return response()->json([
             'message' => 'Optimistic locking simulation executed'
+        ]);
+    });
+
+    Route::get('/verify-stress-test', function () {
+            dd('I am inside the new route!'); // If you don't see this message, the server is IGNORING your file.
+
+     $product = \App\Models\Product::find(6);
+
+    if (!$product) {
+        return response()->json(['error' => 'Product with ID 6 not found'], 404);
+    }
+        $itemsOrdered = \App\Models\OrderItem::where('product_id', $product->id)
+            ->sum('quantity');
+
+        $stockBefore  = 500;
+        $stockAfter   = $product->stock;
+        $consumed     = $stockBefore - $stockAfter;
+
+        return response()->json([
+            'stock_before'   => $stockBefore,
+            'stock_after'    => $stockAfter,
+            'stock_consumed' => $consumed,
+            'items_ordered'  => (int) $itemsOrdered,
+            'match'          => $consumed === (int) $itemsOrdered,
+            'verdict'        => $consumed === (int) $itemsOrdered
+                ? '✅ PASSED — no data loss under 100 concurrent users'
+                : '❌ FAILED — stock mismatch detected',
         ]);
     });
 

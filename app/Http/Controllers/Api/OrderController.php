@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
-use App\Jobs\SendOrderConfirmationJob;
-use App\Mail\OrderConfirmationMail;
+use App\Jobs\ProcessOrderJob;
 use App\Models\Order;
 use App\Services\Order\OrderService;
-use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -41,32 +39,22 @@ class OrderController extends Controller
         return OrderItemResource::collection($order->items);
     }
 
+    // Task 10
     public function store()
     {
         try {
-            $order = $this->orderService->createOrderFromCart(auth('sanctum')->id());
 
-            if (!$order) {
-                return response()->json(['message' => 'The cart is empty'], 400);
-            }
+            $userId = auth('sanctum')->id();
 
-            // TASK 3: Asynchronous Queues
-            // Mail::to($order->user->email)
-            //     ->send(
-            //         new OrderConfirmationMail($order->id, $order->total, $order->status)
-            //     );
-            SendOrderConfirmationJob::dispatch(
-                $order->id,
-                $order->user_id,
-                (float) $order->total,
-                $order->status,
-                $order->user->email,
+            ProcessOrderJob::dispatch(
+                $userId
             );
 
             return response()->json([
-                'message' => 'order has been added successfully'
-            ], 201);
+                'message' => 'Order accepted and queued for processing'
+            ], 202);
         } catch (\Exception $e) {
+
             return response()->json([
                 'message' => 'Order creation failed',
                 'error' => $e->getMessage()

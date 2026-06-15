@@ -131,21 +131,21 @@ return [
             'driver' => 'daily',
             'path'   => storage_path('logs/performance.log'),
             'level'  => 'info',
-          
+            'days'   => 30,
         ],
 
         'activity' => [
             'driver' => 'daily',
             'path'   => storage_path('logs/activity.log'),
             'level'  => 'info',
-            'days'   => 7,
+            'days'   => 30,
         ],
 
         'tracing' => [
             'driver' => 'daily',
             'path'   => storage_path('logs/tracing.log'),
             'level'  => 'info',
-            'days'   => 7,
+            'days'   => 30,
         ],
     ],
 
