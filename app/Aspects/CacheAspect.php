@@ -10,8 +10,10 @@ class CacheAspect
 {
     public function remember(string $key, int $ttl, callable $callback): mixed
     {
-        if (Cache::has($key)) {
-            return Cache::get($key);
+        $cached = Cache::get($key);
+
+        if ($cached !== null) {
+            return $cached;
         }
 
         $value = $callback();
