@@ -8,7 +8,7 @@ class PaymentService
 {
     public function __construct(private ExecutionAspect $execution) {}
 
-    public function processPayment(int $userId, float $amount, bool $shouldFail = true): bool
+    public function processPayment(int $userId, float $amount, bool $shouldFail = false): bool
     {
         return $this->execution->run(
             'PaymentService::processPayment',

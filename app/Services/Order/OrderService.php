@@ -46,34 +46,29 @@ class OrderService
             'OrderService::createOrderFromCart',
             function () use ($userId, $debug) {
 
-                // TASK 2: Resource Management & Capacity Control - Cache::Lock
-                return Cache::lock("checkout-global-limit", 5)
-                    ->block(5, function () use ($userId, $debug) {
+                // TASK 1: Concurrent Access & Data Integrity
+                $cartItems = CartItem::where('user_id', $userId)->get();
 
-                        // TASK 1: Concurrent Access & Data Integrity
-                        $cartItems = CartItem::where('user_id', $userId)->get();
+                if ($cartItems->isEmpty()) {
+                    return null;
+                }
 
-                        if ($cartItems->isEmpty()) {
-                            return null;
-                        }
+                // TASK 8: ACID Transaction
+                return $this->transaction->run(function () use ($cartItems, $userId, $debug) {
 
-                        // TASK 8: ACID Transaction
-                        return $this->transaction->run(function () use ($cartItems, $userId, $debug) {
+                    $order = Order::create([
+                        'user_id' => $userId,
+                        'status'  => 'pending',
+                        'total'   => $this->calculateCartTotal($cartItems),
+                    ]);
 
-                            $order = Order::create([
-                                'user_id' => $userId,
-                                'status'  => 'pending',
-                                'total'   => $this->calculateCartTotal($cartItems),
-                            ]);
+                    $this->payment->processPayment($userId, $order->total);
 
-                            $this->payment->processPayment($userId, $order->total);
+                    $this->processCartItems($order, $cartItems, $debug);
+                    $this->clearCart($cartItems);
 
-                            $this->processCartItems($order, $cartItems, $debug);
-                            $this->clearCart($cartItems);
-
-                            return $order;
-                        });
-                    });
+                    return $order;
+                });
             }
         );
     }
@@ -147,8 +142,8 @@ class OrderService
                         'price'      => $product->price,
                     ]);
                 },
-                lockSeconds: 10,
-                waitSeconds: 10,
+                lockSeconds: 5,
+                waitSeconds: 5,
             );
         }
     }
