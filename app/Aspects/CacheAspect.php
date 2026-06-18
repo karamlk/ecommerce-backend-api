@@ -13,8 +13,11 @@ class CacheAspect
         $cached = Cache::get($key);
 
         if ($cached !== null) {
+            $this->logStatus($key, 'HIT');
             return $cached;
         }
+
+        $this->logStatus($key, 'MISS');
 
         $value = $callback();
         Cache::put($key, $value, $ttl);
@@ -29,9 +32,16 @@ class CacheAspect
     public function forget(string $key): void
     {
         Cache::forget($key);
+        $this->logStatus($key, 'INVALIDATED');
+    }
 
-        Log::channel('performance')->info('[CACHE INVALIDATED]', [
-            'key' => $key,
+    private function logStatus(string $key, string $status): void
+    {
+        Log::channel('performance')->info("[CACHE_STATUS] {$status}", [
+            'key'       => $key,
+            'status'    => $status,
+            'timestamp' => now()->toDateTimeString(),
+            'trace_id'  => app(TracingAspect::class)->getCurrentTraceId(),
         ]);
     }
 }
