@@ -23,10 +23,24 @@ class ProductObserver
 
     public function updated(Product $product): void
     {
+        $changed = array_keys($product->getChanges());
+
+        $nonStructuralChanges = ['stock', 'updated_at'];
+
+        if (empty(array_diff($changed, $nonStructuralChanges))) {
+
+            Log::channel('activity')->info('[PRODUCT STOCK UPDATED]', [
+                'product_id' => $product->id,
+            ]);
+
+            return;
+        }
+
         $this->clear($product);
+
         Log::channel('activity')->info('[PRODUCT UPDATED]', [
             'product_id' => $product->id,
-            'changed'    => array_keys($product->getDirty()),
+            'changed'    => $changed,
         ]);
     }
 
