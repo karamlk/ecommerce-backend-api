@@ -19,11 +19,14 @@ class LoginController extends Controller
 
         $user = User::where('email', $identifier)
             ->orWhere('phone_number', $identifier)
-            ->first();
+            ->first(['id', 'email', 'phone_number', 'password']);
 
         if (!$user || !Hash::check($password, $user->password)) {
             return response()->json(['error' => 'Invalid credentials.'], 401);
         }
+
+        $user->tokens()->delete();
+
 
         $token = $user->createToken('otp-lar1')->plainTextToken;
 
