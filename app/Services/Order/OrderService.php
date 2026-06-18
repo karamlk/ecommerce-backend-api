@@ -7,6 +7,7 @@ use App\Aspects\ExecutionAspect;
 use App\Aspects\TransactionAspect;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Services\Payment\PaymentService;
 use Illuminate\Support\Facades\Cache;
@@ -47,7 +48,9 @@ class OrderService
             function () use ($userId, $debug) {
 
                 // TASK 1: Concurrent Access & Data Integrity
-                $cartItems = CartItem::where('user_id', $userId)->get();
+                $cartItems = CartItem::with('product')
+                    ->where('user_id', $userId)
+                    ->get();
 
                 if ($cartItems->isEmpty()) {
                     return null;
@@ -114,19 +117,35 @@ class OrderService
 
     private function processCartItems($order, $cartItems, $debug = false)
     {
-        foreach ($cartItems as $cartItem) {
+        $productIds = $cartItems
+            ->pluck('product_id')
+            ->unique()
+            ->toArray();
 
-            // TASK 7: Distributed lock
+        $products = Product::whereIn('id', $productIds)
+            ->lockForUpdate()
+            ->get()
+            ->keyBy('id');
+
+        $orderItems = [];
+
+        foreach ($cartItems as $cartItem) {
+            
             $this->distributedLock->acquire(
                 "stock-lock:product:{$cartItem->product_id}",
-                function () use ($cartItem, $order, $debug) {
+                function () use (
+                    $cartItem,
+                    $products,
+                    &$orderItems,
+                    $order,
+                    $debug
+                ) {
 
-                    if ($debug) sleep(3);
+                    // if ($debug) {
+                    //     sleep(3);
+                    // }
 
-                    // TASK 1: DB pessimistic lock
-                    $product = Product::where('id', $cartItem->product_id)
-                        ->lockForUpdate()
-                        ->first();
+                    $product = $products[$cartItem->product_id];
 
                     if ($product->stock < $cartItem->quantity) {
                         throw new \Exception(
@@ -134,17 +153,27 @@ class OrderService
                         );
                     }
 
-                    $product->decrement('stock', $cartItem->quantity);
+                    $product->decrement(
+                        'stock',
+                        $cartItem->quantity
+                    );
 
-                    $order->items()->create([
+                    $orderItems[] = [
+                        'order_id'   => $order->id,
                         'product_id' => $product->id,
                         'quantity'   => $cartItem->quantity,
                         'price'      => $product->price,
-                    ]);
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 },
                 lockSeconds: 5,
-                waitSeconds: 5,
+                waitSeconds: 5
             );
+        }
+
+        if (!empty($orderItems)) {
+            OrderItem::insert($orderItems);
         }
     }
 
