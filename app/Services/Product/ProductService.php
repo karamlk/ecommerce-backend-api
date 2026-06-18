@@ -59,36 +59,34 @@ class ProductService
 
     // Task 6: Distributed caching
     public function getTrendingProducts(int $limit = 10): mixed
-    {
+{
+    return $this->execution->run(
+        'ProductService::getTrendingProducts',
+        fn() => $this->cache->remember(
+            "trending_products",
+            $this->trendingTtl,
+            function () use ($limit) {
+                $ids = Redis::zrevrange('product_popularity', 0, $limit - 1);
 
-        return $this->execution->run(
-            'ProductService::getTrendingProducts',
-            fn() => $this->cache->remember(
-                "trending_products",
-                $this->trendingTtl,
-                function () use ($limit) {
-
-                    $ids = Redis::zrevrange(
-                        'product_popularity',
-                        0,
-                        $limit - 1
-                    );
-
-                    if (empty($ids)) {
-
-                        return Product::latest()
-                            ->take($limit)
-                            ->get();
-                    }
-
-                    return Product::whereIn(
-                        'id',
-                        $ids
-                    )->get();
+                if (empty($ids)) {
+                    return Product::select(['id', 'name', 'price', 'store_id', 'photo_url'])
+                        ->latest('id') 
+                        ->take($limit)
+                        ->get();
                 }
-            )
-        );
-    }
+
+
+                $idsString = implode(',', $ids);
+                
+                return Product::select(['id', 'name', 'price', 'store_id', 'photo_url'])
+                    ->whereIn('id', $ids)
+                    ->orderByRaw("FIELD(id, {$idsString})")
+                    ->get();
+            }
+        )
+    );
+}
+
 
     public function updateProduct(int $productId, array $data): bool
     {
